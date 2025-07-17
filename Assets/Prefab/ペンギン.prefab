@@ -58,6 +58,12 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9671d01b5831a4b448df4b2c6af6f68f, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1062675026019101979}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9671d01b5831a4b448df4b2c6af6f68f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -4588272038667661002}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9671d01b5831a4b448df4b2c6af6f68f, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 8615199633966386550}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9671d01b5831a4b448df4b2c6af6f68f, type: 3}
       insertIndex: -1
@@ -68,6 +74,53 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9671d01b5831a4b448df4b2c6af6f68f, type: 3}
   m_PrefabInstance: {fileID: 5345322139598130468}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1062675026019101979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5111321675631833205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d198d386ad333b4ca680a700b3009f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+--- !u!114 &-4588272038667661002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5111321675631833205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 1cb700b4100e56a42bfbc442f36abbb4, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f11ae6a1-5977-4945-9428-540f2363149d
+    m_ActionName: 'Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]'
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!65 &8615199633966386550
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -114,5 +167,5 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
