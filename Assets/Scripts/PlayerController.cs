@@ -14,39 +14,41 @@ public class PlayerController : MonoBehaviour
     //Rigidbodyへの参照
     private Rigidbody rb;
 
-    //InputActions を保持する変数
-    private PlayerInputActions inputActions;
+    private InputAction moveAction;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        var playerInput = GetComponent<PlayerInput>();
 
-        inputActions = new PlayerInputActions();
+        Debug.Log("actions: " + playerInput.actions); // ← nullじゃないか確認
 
-        // 入力イベント登録（Moveが発生したとき）
-        inputActions.Player.Move.performed += ctx =>
-        {
-            moveInput = ctx.ReadValue<Vector2>();
-        };
-        inputActions.Player.Move.canceled += ctx =>
-        {
-            moveInput = Vector2.zero;
-        };
+        moveAction = playerInput.actions["Move"];
+        Debug.Log("moveAction: " + moveAction); // ← nullならアクション名ミスの可能性
+
+        playerInput.onActionTriggered += OnActionTriggered;
     }
 
-    private void OnEnable()
+    private void OnDestroy()
     {
-        inputActions.Player.Enable();
+        // 登録解除（メモリリーク防止）
+        var playerInput = GetComponent<PlayerInput>();
+
+        playerInput.onActionTriggered -= OnActionTriggered;
     }
 
-    private void OnDisable()
+    private void OnActionTriggered(InputAction.CallbackContext context)
     {
-        inputActions.Player.Disable();
+        if (context.action == moveAction)
+        {
+            moveInput = context.ReadValue<Vector2>();
+        }
     }
 
     private void FixedUpdate()
     {
         Vector3 movement = new Vector3(moveInput.x, 0, moveInput.y);
+
         rb.velocity = movement * moveSpeed + new Vector3(0, rb.velocity.y, 0);
     }
 }
