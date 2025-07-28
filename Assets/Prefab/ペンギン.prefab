@@ -58,7 +58,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9671d01b5831a4b448df4b2c6af6f68f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1062675026019101979}
+      addedObject: {fileID: 3801945173432146307}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9671d01b5831a4b448df4b2c6af6f68f, type: 3}
       insertIndex: -1
       addedObject: {fileID: -4588272038667661002}
@@ -74,7 +74,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9671d01b5831a4b448df4b2c6af6f68f, type: 3}
   m_PrefabInstance: {fileID: 5345322139598130468}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1062675026019101979
+--- !u!114 &3801945173432146307
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -113,7 +113,19 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3801945173432146307}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnMove
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: f11ae6a1-5977-4945-9428-540f2363149d
     m_ActionName: 'Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]'
   m_NeverAutoSwitchControlSchemes: 0
