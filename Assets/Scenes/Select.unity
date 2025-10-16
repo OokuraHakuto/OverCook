@@ -784,7 +784,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 484, y: 315}
+  m_AnchoredPosition: {x: 484, y: 0}
   m_SizeDelta: {x: 430, y: 310}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &519381695
@@ -1763,6 +1763,7 @@ GameObject:
   - component: {fileID: 914866385}
   - component: {fileID: 914866386}
   - component: {fileID: 914866387}
+  - component: {fileID: 914866388}
   m_Layer: 0
   m_Name: 1P
   m_TagString: Untagged
@@ -1883,6 +1884,20 @@ MonoBehaviour:
   upArrow: {fileID: 978245241}
   downArrow: {fileID: 632681461}
   cursor: {fileID: 1145358931}
+  OKText: {fileID: 1046733733}
+  player: {fileID: 914866381}
+--- !u!114 &914866388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 914866381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3fd54fb1d9bedc4584b09439bc90537, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &939427486
 GameObject:
   m_ObjectHideFlags: 0
@@ -2380,7 +2395,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 53, y: 315}
+  m_AnchoredPosition: {x: 53, y: 0}
   m_SizeDelta: {x: 430, y: 310}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1145358935
@@ -3253,6 +3268,7 @@ GameObject:
   - component: {fileID: 1673383234}
   - component: {fileID: 1673383235}
   - component: {fileID: 1673383236}
+  - component: {fileID: 1673383237}
   m_Layer: 0
   m_Name: 2P
   m_TagString: Untagged
@@ -3360,6 +3376,23 @@ MonoBehaviour:
   selectDiff: {fileID: 8300000, guid: 7fc405c9f47d2e54398e0d913c638f12, type: 3}
   OK: {fileID: 8300000, guid: 00322b3991441014bb55f3f120cc4d3a, type: 3}
   cancel: {fileID: 8300000, guid: 5efde5db4aca89144ac6d29ade41ec67, type: 3}
+--- !u!114 &1673383237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673383231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8975ebfc524da347b67fbd429306e8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upArrow: {fileID: 166444576}
+  downArrow: {fileID: 660353512}
+  cursor: {fileID: 519381692}
+  OKText: {fileID: 742110341}
+  player: {fileID: 1673383231}
 --- !u!1 &1698819758
 GameObject:
   m_ObjectHideFlags: 0
@@ -3912,7 +3945,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 314}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &5237642953684164418

@@ -10,9 +10,9 @@ public class Go2GameMainManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(OKflg1P&& OKflg2P)
+        if(OKflg1P && OKflg2P)
         {
-            SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene("GameMain");
         }
     }
 }

@@ -34,7 +34,7 @@ public class CTRLer_2P : MonoBehaviour
         Debug.Log("‚ ‚Õ‚Å2P");
 
         SelectChara();
-        SelectDiff();
+        //SelectDiff();
     }
 
     public void SelectChara()
