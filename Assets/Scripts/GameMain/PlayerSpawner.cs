@@ -1,62 +1,66 @@
-using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-
 
 public class PlayerSpawner : MonoBehaviour
 {
-    //Unityエディタ上で設定できるプレイヤーの出現位置のリスト。
-    public Transform[] spawnPoints;
+    [Header("プレイヤー1の出現位置")]
+    public Transform player1SpawnPoint; // P1がスポーンする場所
 
-    //プレイヤー
-    private int currentSpawnIndex = 0;
+    [Header("プレイヤー2の出現位置")]
+    public Transform player2SpawnPoint; // P2がスポーンする場所
 
-    //このスクリプトが有効になるとき（シーン開始時など）に,
-    //PlayerInputManagerに「プレイヤーが参加したら OnPlayerJoined を呼んでね」と登録している。
-    private void OnEnable()
+    void Start()
     {
-        if (PlayerInputManager.instance != null)
+        if (SelectionManager.instance != null)
         {
-            PlayerInputManager.instance.onPlayerJoined += OnPlayerJoined;
+            // ---------------------------------
+            // プレイヤー1をスポーンさせる
+            // ---------------------------------
+            GameObject p1Prefab = SelectionManager.instance.player1Prefab;
+            if (p1Prefab != null)
+            {
+                // 1. 生成したP1オブジェクトを変数に格納
+                GameObject player1Object = Instantiate(p1Prefab, player1SpawnPoint.position, player1SpawnPoint.rotation);
+
+                // 2. P1オブジェクトからPlayerControllerスクリプトを取得
+                PlayerController p1Controller = player1Object.GetComponent<PlayerController>();
+                if (p1Controller != null)
+                {
+                    // 3. デバッグ用のplayerIDを「1」に設定
+                    p1Controller.playerID = 1;
+                }
+                Debug.Log("プレイヤー1: " + p1Prefab.name + " をスポーンしました (ID: 1)");
+            }
+            else
+            {
+                Debug.LogWarning("プレイヤー1のキャラクターが選択されていません！");
+            }
+
+            // ---------------------------------
+            // プレイヤー2をスポーンさせる
+            // ---------------------------------
+            GameObject p2Prefab = SelectionManager.instance.player2Prefab;
+            if (p2Prefab != null)
+            {
+                // 1. 生成したP2オブジェクトを変数に格納
+                GameObject player2Object = Instantiate(p2Prefab, player2SpawnPoint.position, player2SpawnPoint.rotation);
+
+                // 2. P2オブジェクトからPlayerControllerスクリプトを取得
+                PlayerController p2Controller = player2Object.GetComponent<PlayerController>();
+                if (p2Controller != null)
+                {
+                    // 3. デバッグ用のplayerIDを「2」に設定
+                    p2Controller.playerID = 2;
+                }
+                Debug.Log("プレイヤー2: " + p2Prefab.name + " をスポーンしました (ID: 2)");
+            }
+            else
+            {
+                Debug.LogWarning("プレイヤー2のキャラクターが選択されていません！");
+            }
         }
         else
         {
-            Debug.LogWarning("PlayerInputManager が見つかりませんでした！");
-        }
-    }
-
-    //実際にそのプレイヤーを指定のスポーン位置に移動させる。
-    private void OnDisable()
-    {
-        if (PlayerInputManager.instance != null)
-        {
-            PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;
-        }
-        else
-        {
-            Debug.LogWarning("PlayerInputManager が見つかりませんでした！");
-        }
-    }
-
-    //新しいプレイヤーが参加したときに自動的に呼ばれる関数。
-    //引数の playerInput は、生成されたプレイヤーオブジェクト（Clone）にアクセスするためのもの。
-    private void OnPlayerJoined(PlayerInput playerInput)
-    { 
-        if (currentSpawnIndex < spawnPoints.Length)
-        {
-            Vector3 spawnPos = spawnPoints[currentSpawnIndex].position;
-
-            playerInput.transform.position = spawnPoints[currentSpawnIndex].position;
-
-            Debug.Log($"Player {currentSpawnIndex} spawned at {spawnPos}");
-
-            currentSpawnIndex++;
-        }
-        else
-        {
-            Debug.LogWarning("スポーン地点が足りません！");
+            Debug.LogError("キャラクター選択情報（SelectionManager）が見つかりません！");
         }
     }
 }

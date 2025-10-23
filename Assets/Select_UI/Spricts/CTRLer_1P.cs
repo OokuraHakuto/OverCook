@@ -9,11 +9,11 @@ public class CTRLer_1P : MonoBehaviour
 
     /*public GameObject cursor;*/
     int diff;
-    public int chara;
+    public int chara; // 現在選択中のキャラ番号（1～10）
 
-    //↓共有動作のスプリクトに移す？
-    public GameObject penguin1, penguin2, penguin3, penguin4, penguin5,
-                  penguin6, penguin7, penguin8, penguin9, nanchara;
+    [Header("キャラクタープレファブのリスト")]
+    public GameObject[] characterPrefabs;
+
     public Transform oya;
     Vector3 penguinSize = new Vector3(0.75f, 0.75f, 0.75f),
             nancharaSize = new Vector3(1.5f, 1.5f, 1.5f);
@@ -22,8 +22,15 @@ public class CTRLer_1P : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        chara = 1;
+        chara = 1; // P1の初期カーソル位置
         diff = 0;
+
+        // リストにプレファブが設定されているか確認
+        if (characterPrefabs.Length == 0)
+        {
+            Debug.LogError("CTRLer_1PのcharacterPrefabsリストにプレファブが設定されていません！");
+            return;
+        }
 
         DispChara(chara);
     }
@@ -31,26 +38,24 @@ public class CTRLer_1P : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("あぷで1P");
-
         SelectChara();
         SelectDiff();
     }
 
     public void SelectChara()
     {
-        if (Input.GetKeyDown("w"))
+        if (Input.GetKeyDown("w")) // P1のキー（W）はそのまま
         {
             chara--;
-            if (chara <= 0) chara = 10;
+            if (chara <= 0) chara = characterPrefabs.Length; // 10からリストの長さに変更
 
             DispChara(chara);
             //soundMgr.PlaySE(1);
         }
-        if (Input.GetKeyDown("s"))
+        if (Input.GetKeyDown("s")) // P1のキー（S）はそのまま
         {
             chara++;
-            if (chara >= 11) chara = 1;
+            if (chara >= characterPrefabs.Length + 1) chara = 1; // 11から(リストの長さ+1)に変更
 
             DispChara(chara);
             //soundMgr.PlaySE(1);
@@ -59,76 +64,79 @@ public class CTRLer_1P : MonoBehaviour
 
     public void SelectDiff()
     {
+        // (この関数は変更なし。P1のA/Dキーを使用)
         if (Input.GetKeyDown("a") && diff > 0)
         {
             /*cursor.transform.Translate(-10.6f, 33.5f, 0);*/
-            //soundMgr.PlaySE(2);
-
             diff--;
             Debug.Log("Aおうか " + diff);
-            Debug.Log(diff);
         }
 
         if (Input.GetKeyDown("d") && diff < 2)
         {
             /*cursor.transform.Translate(10.6f, -33.5f, 0);*/
-            //soundMgr.PlaySE(2);
-
             diff++;
             Debug.Log("Dおうか " + diff);
         }
     }
 
-    //↓共有動作のスプリクトに移す？
     void DispChara(int num)
     {
-        foreach (Transform child in transform)
+        // 1. 既存のモデルを消す（これはOK）
+        foreach (Transform child in oya)
         {
             Destroy(child.gameObject);
         }
 
-        switch (num)
+        int index = num - 1;
+        if (index < 0 || index >= characterPrefabs.Length)
         {
-            case 1:
-                Instantiate(penguin1, oya);
-                oya.transform.localScale = penguinSize;
-                break;
-            case 2:
-                Instantiate(penguin2, oya);
-                oya.transform.localScale = penguinSize;
-                break;
-            case 3:
-                Instantiate(penguin3, oya);
-                oya.transform.localScale = penguinSize;
-                break;
-            case 4:
-                Instantiate(penguin4, oya);
-                oya.transform.localScale = penguinSize;
-                break;
-            case 5:
-                Instantiate(penguin5, oya);
-                oya.transform.localScale = penguinSize;
-                break;
-            case 6:
-                Instantiate(penguin6, oya);
-                oya.transform.localScale = penguinSize;
-                break;
-            case 7:
-                Instantiate(penguin7, oya);
-                oya.transform.localScale = penguinSize;
-                break;
-            case 8:
-                Instantiate(penguin8, oya);
-                oya.transform.localScale = penguinSize;
-                break;
-            case 9:
-                Instantiate(penguin9, oya);
-                oya.transform.localScale = penguinSize;
-                break;
-            case 10:
-                Instantiate(nanchara, oya);
-                oya.transform.localScale = nancharaSize;
-                break;
+            Debug.LogError("選択番号がプレファブリストの範囲外です！");
+            return;
         }
+
+        GameObject prefabToSpawn = characterPrefabs[index];
+
+        if (prefabToSpawn != null)
+        {
+            // 2. 見本用のモデルを生成する
+            GameObject displayModel = Instantiate(prefabToSpawn, oya);
+
+            // 3. 生成したモデルの「移動スクリプト」を無効化する
+            PlayerController controller = displayModel.GetComponent<PlayerController>();
+            if (controller != null)
+            {
+                controller.enabled = false; // これでUpdate()が呼ばれなくなる
+            }
+
+            // 4. ついでに「物理演算」もオフにしておく（安全のため）
+            Rigidbody rb = displayModel.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = true; // 物理エンジンで動かなくする
+                rb.useGravity = false; // 重力をオフにする
+            }
+
+            // 5. スケールを調整する
+            if (num == characterPrefabs.Length) // nanchara
+            {
+                oya.transform.localScale = nancharaSize;
+            }
+            else
+            {
+                oya.transform.localScale = penguinSize;
+            }
+        }
+    }
+
+    // 自分が現在選んでいるプレファブを返す関数
+    public GameObject GetCurrentSelectedPrefab()
+    {
+        int index = chara - 1;
+        if (index >= 0 && index < characterPrefabs.Length)
+        {
+            return characterPrefabs[index];
+        }
+        return null; // 該当なし
     }
 }
