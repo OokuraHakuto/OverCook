@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 051f3ec54dc56fb43846f38b8d5fdc5b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - BGMSource: {instanceID: 0}
+  - SESource: {instanceID: 0}
+  - selectChara: {fileID: 8300000, guid: a154818532552be41aa0343e99e7bf9a, type: 3}
+  - selectDiff: {fileID: 8300000, guid: 7fc405c9f47d2e54398e0d913c638f12, type: 3}
+  - OK: {fileID: 8300000, guid: 00322b3991441014bb55f3f120cc4d3a, type: 3}
+  - cancel: {fileID: 8300000, guid: 5efde5db4aca89144ac6d29ade41ec67, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

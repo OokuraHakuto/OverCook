@@ -1,0 +1,27 @@
+fileFormatVersion: 2
+guid: 317fd27db8802ec459af1d9882aefdff
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - penguin1: {fileID: 919132149155446097, guid: 9671d01b5831a4b448df4b2c6af6f68f, type: 3}
+  - penguin2: {fileID: 919132149155446097, guid: 597b582b1eb725a4e9ba39de00a28c96, type: 3}
+  - penguin3: {fileID: 919132149155446097, guid: b601f27f49f775d4d8a3798322df09d9, type: 3}
+  - penguin4: {fileID: 919132149155446097, guid: d8c825f97d1930b4d94f17681479e88c, type: 3}
+  - penguin5: {fileID: 919132149155446097, guid: 92cd1a12d8706114685702791c1c45ac, type: 3}
+  - penguin6: {fileID: 919132149155446097, guid: 0d3f2821f5f6bee47a0f04808197561f, type: 3}
+  - penguin7: {fileID: 919132149155446097, guid: 1df9b85d9b11eac468446c79e97d60fb, type: 3}
+  - penguin8: {fileID: 919132149155446097, guid: 35585b8fd1f5ea64497b5060ead81e8b, type: 3}
+  - penguin9: {fileID: 919132149155446097, guid: d55d77dd12304bc40bd723604fea1e2e, type: 3}
+  - nanchara: {fileID: 919132149155446097, guid: 6e7a70712db29e242872532546dd1f53, type: 3}
+  - backSld: {instanceID: 0}
+  - backSldGo: {instanceID: 0}
+  - okSld: {instanceID: 0}
+  - okSldGo: {instanceID: 0}
+  - standbyTextGo: {instanceID: 0}
+  - standbyText: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

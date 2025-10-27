@@ -68,6 +68,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 597b582b1eb725a4e9ba39de00a28c96, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3521102842488177105}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 597b582b1eb725a4e9ba39de00a28c96, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1275789556855713418}
   m_SourcePrefab: {fileID: 100100000, guid: 597b582b1eb725a4e9ba39de00a28c96, type: 3}
 --- !u!1 &8281533795883501786 stripped
 GameObject:
@@ -86,7 +89,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d198d386ad333b4ca680a700b3009f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 10
+  rotateSpeed: 10
+  playerID: 1
 --- !u!114 &1615662197157970456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,9 +133,13 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: f11ae6a1-5977-4945-9428-540f2363149d
     m_ActionName: 'Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/DualShock4GamepadHID/leftStick/up,/DualShock4GamepadHID/leftStick/down,/DualShock4GamepadHID/leftStick/left,/DualShock4GamepadHID/leftStick/right]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c3431b6b-3b57-48d4-86e0-91bcdcf836ea
+    m_ActionName: 'Player2/Move[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
+  m_DefaultActionMap: Player2
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!65 &-1899037938556153490
@@ -179,5 +188,27 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!95 &1275789556855713418
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8281533795883501786}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
