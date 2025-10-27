@@ -1118,6 +1118,52 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a3dd4931752b6c6459d30148132762e6, type: 3}
+--- !u!1 &636453161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 636453163}
+  - component: {fileID: 636453162}
+  m_Layer: 0
+  m_Name: SelectionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &636453162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636453161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c753ffdfdc8a29f47a4df14d09781172, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player1Prefab: {fileID: 0}
+  player2Prefab: {fileID: 0}
+--- !u!4 &636453163
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636453161}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.2723784, y: 3.024872, z: -0.5777604}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &660353512
 GameObject:
   m_ObjectHideFlags: 0
@@ -1800,16 +1846,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chara: 0
-  penguin1: {fileID: 919132149155446097, guid: 9671d01b5831a4b448df4b2c6af6f68f, type: 3}
-  penguin2: {fileID: 919132149155446097, guid: 597b582b1eb725a4e9ba39de00a28c96, type: 3}
-  penguin3: {fileID: 919132149155446097, guid: b601f27f49f775d4d8a3798322df09d9, type: 3}
-  penguin4: {fileID: 919132149155446097, guid: d8c825f97d1930b4d94f17681479e88c, type: 3}
-  penguin5: {fileID: 919132149155446097, guid: 92cd1a12d8706114685702791c1c45ac, type: 3}
-  penguin6: {fileID: 919132149155446097, guid: 0d3f2821f5f6bee47a0f04808197561f, type: 3}
-  penguin7: {fileID: 919132149155446097, guid: 1df9b85d9b11eac468446c79e97d60fb, type: 3}
-  penguin8: {fileID: 919132149155446097, guid: 35585b8fd1f5ea64497b5060ead81e8b, type: 3}
-  penguin9: {fileID: 919132149155446097, guid: d55d77dd12304bc40bd723604fea1e2e, type: 3}
-  nanchara: {fileID: 919132149155446097, guid: 6e7a70712db29e242872532546dd1f53, type: 3}
+  characterPrefabs:
+  - {fileID: 5111321675631833205, guid: 8c3c063806243394b9ae5b033073f7a0, type: 3}
+  - {fileID: 8281533795883501786, guid: b6988d791b3d2ab4882e37c94e04d020, type: 3}
+  - {fileID: 3652345268491523101, guid: dbcb2aea0dc7f444185a26e8876d1872, type: 3}
+  - {fileID: 6249423440264213198, guid: 0805de07fc15e5d47b45a5ed0d98d55a, type: 3}
+  - {fileID: 5875468914298836694, guid: 242e02235fa45444f934728561a2a632, type: 3}
+  - {fileID: 151959400738634278, guid: bebd50e1516cc9d43a2ff13429b8211b, type: 3}
+  - {fileID: 3512405652663852563, guid: 2417900cef1644342b82a2b1b6ec6690, type: 3}
+  - {fileID: 1496428919943271388, guid: b94cb5f853c65ee4f891b5197b76d2fc, type: 3}
+  - {fileID: 7584580684193257010, guid: fa0d8455f092f544c96da748c18b653a, type: 3}
+  - {fileID: 1495136724509397032, guid: a16c3f9697294fd4dbec2fa119787113, type: 3}
   oya: {fileID: 914866382}
 --- !u!114 &914866384
 MonoBehaviour:
@@ -1824,16 +1871,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNum: 1
-  penguin1: {fileID: 919132149155446097, guid: 9671d01b5831a4b448df4b2c6af6f68f, type: 3}
-  penguin2: {fileID: 919132149155446097, guid: 597b582b1eb725a4e9ba39de00a28c96, type: 3}
-  penguin3: {fileID: 919132149155446097, guid: b601f27f49f775d4d8a3798322df09d9, type: 3}
-  penguin4: {fileID: 919132149155446097, guid: d8c825f97d1930b4d94f17681479e88c, type: 3}
-  penguin5: {fileID: 919132149155446097, guid: 92cd1a12d8706114685702791c1c45ac, type: 3}
-  penguin6: {fileID: 919132149155446097, guid: 0d3f2821f5f6bee47a0f04808197561f, type: 3}
-  penguin7: {fileID: 919132149155446097, guid: 1df9b85d9b11eac468446c79e97d60fb, type: 3}
-  penguin8: {fileID: 919132149155446097, guid: 35585b8fd1f5ea64497b5060ead81e8b, type: 3}
-  penguin9: {fileID: 919132149155446097, guid: d55d77dd12304bc40bd723604fea1e2e, type: 3}
-  nanchara: {fileID: 919132149155446097, guid: 6e7a70712db29e242872532546dd1f53, type: 3}
   backSld: {fileID: 158335928}
   backSldGo: {fileID: 158335926}
   okSld: {fileID: 1540557607}
@@ -3307,16 +3344,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cursor: {fileID: 519381692}
   chara: 0
-  penguin1: {fileID: 919132149155446097, guid: 9671d01b5831a4b448df4b2c6af6f68f, type: 3}
-  penguin2: {fileID: 919132149155446097, guid: 597b582b1eb725a4e9ba39de00a28c96, type: 3}
-  penguin3: {fileID: 919132149155446097, guid: b601f27f49f775d4d8a3798322df09d9, type: 3}
-  penguin4: {fileID: 919132149155446097, guid: d8c825f97d1930b4d94f17681479e88c, type: 3}
-  penguin5: {fileID: 919132149155446097, guid: 92cd1a12d8706114685702791c1c45ac, type: 3}
-  penguin6: {fileID: 919132149155446097, guid: 0d3f2821f5f6bee47a0f04808197561f, type: 3}
-  penguin7: {fileID: 919132149155446097, guid: 1df9b85d9b11eac468446c79e97d60fb, type: 3}
-  penguin8: {fileID: 919132149155446097, guid: 35585b8fd1f5ea64497b5060ead81e8b, type: 3}
-  penguin9: {fileID: 919132149155446097, guid: d55d77dd12304bc40bd723604fea1e2e, type: 3}
-  nanchara: {fileID: 919132149155446097, guid: 6e7a70712db29e242872532546dd1f53, type: 3}
+  characterPrefabs:
+  - {fileID: 5111321675631833205, guid: 8c3c063806243394b9ae5b033073f7a0, type: 3}
+  - {fileID: 8281533795883501786, guid: b6988d791b3d2ab4882e37c94e04d020, type: 3}
+  - {fileID: 3652345268491523101, guid: dbcb2aea0dc7f444185a26e8876d1872, type: 3}
+  - {fileID: 6249423440264213198, guid: 0805de07fc15e5d47b45a5ed0d98d55a, type: 3}
+  - {fileID: 5875468914298836694, guid: 242e02235fa45444f934728561a2a632, type: 3}
+  - {fileID: 151959400738634278, guid: bebd50e1516cc9d43a2ff13429b8211b, type: 3}
+  - {fileID: 3512405652663852563, guid: 2417900cef1644342b82a2b1b6ec6690, type: 3}
+  - {fileID: 1496428919943271388, guid: b94cb5f853c65ee4f891b5197b76d2fc, type: 3}
+  - {fileID: 7584580684193257010, guid: fa0d8455f092f544c96da748c18b653a, type: 3}
+  - {fileID: 1495136724509397032, guid: a16c3f9697294fd4dbec2fa119787113, type: 3}
   oya: {fileID: 1673383232}
 --- !u!114 &1673383234
 MonoBehaviour:
@@ -3331,16 +3369,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNum: 2
-  penguin1: {fileID: 919132149155446097, guid: 9671d01b5831a4b448df4b2c6af6f68f, type: 3}
-  penguin2: {fileID: 919132149155446097, guid: 597b582b1eb725a4e9ba39de00a28c96, type: 3}
-  penguin3: {fileID: 919132149155446097, guid: b601f27f49f775d4d8a3798322df09d9, type: 3}
-  penguin4: {fileID: 919132149155446097, guid: d8c825f97d1930b4d94f17681479e88c, type: 3}
-  penguin5: {fileID: 919132149155446097, guid: 92cd1a12d8706114685702791c1c45ac, type: 3}
-  penguin6: {fileID: 919132149155446097, guid: 0d3f2821f5f6bee47a0f04808197561f, type: 3}
-  penguin7: {fileID: 919132149155446097, guid: 1df9b85d9b11eac468446c79e97d60fb, type: 3}
-  penguin8: {fileID: 919132149155446097, guid: 35585b8fd1f5ea64497b5060ead81e8b, type: 3}
-  penguin9: {fileID: 919132149155446097, guid: d55d77dd12304bc40bd723604fea1e2e, type: 3}
-  nanchara: {fileID: 919132149155446097, guid: 6e7a70712db29e242872532546dd1f53, type: 3}
   backSld: {fileID: 224634442}
   backSldGo: {fileID: 224634440}
   okSld: {fileID: 20900004}
@@ -4072,3 +4100,15 @@ SceneRoots:
   - {fileID: 202216973}
   - {fileID: 831286482}
   - {fileID: 1272266006}
+  - {fileID: 232730440}
+  - {fileID: 90249358}
+  - {fileID: 1872319241}
+  - {fileID: 804101356}
+  - {fileID: 1123633659}
+  - {fileID: 1354187952}
+  - {fileID: 1522753270}
+  - {fileID: 534664444}
+  - {fileID: 163417206}
+  - {fileID: 1082023920}
+  - {fileID: 636453163}
+
