@@ -13,9 +13,9 @@ public class TitlePopIn : MonoBehaviour
         titleImage.color = new Color(1, 1, 1, 0);
 
         //ポップインアニメーション
-        transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+        transform.DOScale(Vector3.one, 2f).SetEase(Ease.OutBack);
 
         // フェードイン
-        titleImage.DOFade(1f, 0.5f);
+        titleImage.DOFade(0.5f, 0.5f);
     }
 }
