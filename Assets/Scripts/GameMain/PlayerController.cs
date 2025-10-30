@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 // 完成版（ビルド時）でのみInput Systemを読み込む
 #if !UNITY_EDITOR
 using UnityEngine.InputSystem;
@@ -83,4 +84,39 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
         }
     }
+
+    //プレイヤーが触れているインタラクト可能なもの
+    private IInteracttable currentInteractable;
+
+    //InteractZoneのトリガーに入ったときに呼ばれる
+    private void OnTriggerEnter(Collider other)
+    {
+        //触れた相手がIInteracttableのルールを持っているか調べる
+        //持っていれば変数に記憶し、無い場合はnullを入れる
+        currentInteractable = other.GetComponent<IInteracttable>();
+
+        if(currentInteractable != null)
+        {
+            Debug.Log("目の前に" + other.name + "がある");
+        }
+    }
+
+    // InteractZoneのトリガーから出た時に呼ばれる
+    private void OnTriggerExit(Collider other)
+    {
+        // 触れていたモノから離れたら、忘れる
+        currentInteractable = null;
+    }
+
+    // 「Interact」アクションが押された時に呼ばれる
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        // ボタンが押された瞬間、かつ、目の前に何かインタラクト可能なモノがある
+        if (context.performed && currentInteractable != null)
+        {
+            // 相手が誰かは知らないが、とにかくInteract()命令を送る
+            currentInteractable.Interact();
+        }
+    }
+
 }
