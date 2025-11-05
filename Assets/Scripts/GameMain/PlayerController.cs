@@ -9,9 +9,17 @@ public class PlayerController : MonoBehaviour
 {
     // --- 両方のモードで共通して使う変数 ---
     [Header("移動速度")]
-    public float moveSpeed = 5f; // キャラクターの移動速度
+    public float moveSpeed = 10f; // キャラクターの移動速度
     [Header("回転の速さ")]
     public float rotateSpeed = 10f; // キャラクターの回転の追従速度
+
+    [Header("インタラクト設定")]
+    public float interactDistance = 3f; // 目の前を調べる距離
+    public LayerMask interactableLayer; // レーザービームが当たるレイヤー
+
+    [Header("インタラクトの仰角")]
+    [Range(0f, 1f)]
+    public float verticalAngle = 0.5f;
 
     private Rigidbody rb; // 物理演算を管理するRigidbodyコンポーネント
     private Vector2 moveInput; // 移動入力（X, Y）を保持する変数
@@ -44,6 +52,15 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftArrow)) { moveInput.x = -1; }
             if (Input.GetKey(KeyCode.RightArrow)) { moveInput.x = 1; }
         }
+
+        if (playerID == 1 && Input.GetKeyDown(KeyCode.E)) // P1はEキー
+        {
+            DoInteract(); // 共通のインタラクト関数を呼ぶ
+        }
+        else if (playerID == 2 && Input.GetKeyDown(KeyCode.P)) // P2はPキー（など、好きなキーに）
+        {
+            DoInteract(); // 共通のインタラクト関数を呼ぶ
+        }
     }
 
 #else // ▼▼▼ ゲームをビルドした時（完成版）だけ、この部分が有効になる ▼▼▼
@@ -53,6 +70,15 @@ public class PlayerController : MonoBehaviour
     {
         // パッドやキーボードからの入力をVector2として受け取る
         moveInput = context.ReadValue<Vector2>();
+    }
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        // ボタンが押された瞬間
+        if (context.performed)
+        {
+            DoInteract(); // 共通のインタラクト関数を呼ぶ
+        }
     }
 
 #endif // ▲▲▲ ここで命令は終わり ▲▲▲
@@ -65,6 +91,8 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
     }
+
+
 
     // 物理演算のタイミングで一定間隔で呼ばれる
     void FixedUpdate()
@@ -85,37 +113,53 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //プレイヤーが触れているインタラクト可能なもの
-    private IInteracttable currentInteractable;
 
-    //InteractZoneのトリガーに入ったときに呼ばれる
-    private void OnTriggerEnter(Collider other)
+    // 「インタラクトする」という実際の行動（両方のモードから呼ばれる）
+    private void DoInteract()
     {
-        //触れた相手がIInteracttableのルールを持っているか調べる
-        //持っていれば変数に記憶し、無い場合はnullを入れる
-        currentInteractable = other.GetComponent<IInteracttable>();
+        // 1. 発射地点（胸の高さ）
+        Vector3 rayOrigin = transform.position + Vector3.up * 0.75f;
 
-        if(currentInteractable != null)
+        // 2. 発射方向を計算（まっすぐ前 + 設定した上向きの角度）
+        Vector3 forward = transform.forward;
+        Vector3 upward = transform.up * verticalAngle; // verticalAngleはインスペクタで設定
+        Vector3 direction = (forward + upward).normalized;
+
+        // 1本のレーザーを視覚的にデバッグ表示する (Sceneビューで確認できます)
+        Debug.DrawRay(rayOrigin, direction * interactDistance, Color.red, 1.0f);
+
+        RaycastHit hit;
+        // 3. 1本のレーザーを発射する
+        if (Physics.Raycast(rayOrigin, direction, out hit, interactDistance, interactableLayer))
         {
-            Debug.Log("目の前に" + other.name + "がある");
+            // "Interactable" レイヤーの何かにヒットした！
+            Debug.Log("Raycastがヒットしました！ ヒットしたオブジェクト: " + hit.collider.name);
+
+            // 4. まず、ヒットしたオブジェクト自身を調べる
+            IInteracttable interactable = hit.collider.GetComponent<IInteracttable>();
+
+            if (interactable == null)
+            {
+                // 5. もし持ってなかったら、代わりに親オブジェクトを調べる
+                interactable = hit.collider.GetComponentInParent<IInteracttable>();
+            }
+
+            if (interactable != null)
+            {
+                // 6. 見つかった！ 相手のInteract()関数を呼び出す
+                Debug.Log(hit.collider.name + " の親から IInteracttable スクリプトを見つけました！");
+                interactable.Interact();
+            }
+            else
+            {
+                // 親オブジェクトにもスクリプトがなかった場合
+                Debug.LogWarning(hit.collider.name + " とその親は IInteracttable スクリプトを持っていません。");
+            }
         }
-    }
-
-    // InteractZoneのトリガーから出た時に呼ばれる
-    private void OnTriggerExit(Collider other)
-    {
-        // 触れていたモノから離れたら、忘れる
-        currentInteractable = null;
-    }
-
-    // 「Interact」アクションが押された時に呼ばれる
-    public void OnInteract(InputAction.CallbackContext context)
-    {
-        // ボタンが押された瞬間、かつ、目の前に何かインタラクト可能なモノがある
-        if (context.performed && currentInteractable != null)
+        else
         {
-            // 相手が誰かは知らないが、とにかくInteract()命令を送る
-            currentInteractable.Interact();
+            // 目の前には何もない
+            Debug.Log("目の前に何もない");
         }
     }
 

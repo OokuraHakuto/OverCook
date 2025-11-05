@@ -91,6 +91,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   rotateSpeed: 10
+  interactDistance: 3
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  verticalAngle: 0.5
   playerID: 1
 --- !u!114 &-338518437513373818
 MonoBehaviour:

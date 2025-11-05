@@ -26,12 +26,19 @@ public class MicrWave : MonoBehaviour, IInteracttable
 
     private void StartMeltingProcess()
     {
+        isMelting = true;
+        Debug.Log("材料を溶かし始めます...(" + meltTime + "秒)");
 
+        //ここに材料を持っていないときの処理やゲージなどの処理を記述予定
+
+        Invoke("FinishMelting", meltTime);
     }
 
     private void FinishMelting()
     {
+        isMelting = false;
 
+        Debug.Log("材料が解けました");
     }
 
 }
