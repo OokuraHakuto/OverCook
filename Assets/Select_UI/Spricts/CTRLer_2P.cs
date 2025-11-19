@@ -16,7 +16,7 @@ public class CTRLer_2P : MonoBehaviour
 
     public Transform oya;
     Vector3 penguinSize = new Vector3(0.75f, 0.75f, 0.75f),
-            nancharaSize = new Vector3(1.5f, 1.5f, 1.5f);
+            nancharaSize = new Vector3(0.75f, 0.75f, 0.75f);
 
 
     // Start is called before the first frame update
@@ -116,13 +116,15 @@ public class CTRLer_2P : MonoBehaviour
             }
 
             // 5. スケールを調整する
-            if (num == characterPrefabs.Length) // nanchara
+            if (prefabToSpawn.name.Contains("nanchara"))
             {
-                oya.transform.localScale = nancharaSize;
+                oya.transform.localScale = nancharaSize; // デカくする
+
+                displayModel.transform.localPosition = new Vector3(0, 1.0f, 0);
             }
             else
             {
-                oya.transform.localScale = penguinSize;
+                oya.transform.localScale = penguinSize; // 普通のサイズ
             }
         }
     }

@@ -17,9 +17,15 @@ public class PlayerController : MonoBehaviour
     public float interactDistance = 3f; // 目の前を調べる距離
     public LayerMask interactableLayer; // レーザービームが当たるレイヤー
 
-    [Header("インタラクトの仰角")]
+    [Header("インタラクトの判定幅（左右）")]
+    [Tooltip("0 = まっすぐ, 0.5 = 左右に広がる")]
     [Range(0f, 1f)]
-    public float verticalAngle = 0.5f;
+    public float interactWidth = 0.3f; // 左右の広がり
+
+    [Header("インタラクトの判定幅（上下）")]
+    [Tooltip("0 = まっすぐ, 0.5 = 上下に広がる")]
+    [Range(0f, 1f)]
+    public float verticalAngle = 0.3f; // 上下の角度
 
     private Rigidbody rb; // 物理演算を管理するRigidbodyコンポーネント
     private Vector2 moveInput; // 移動入力（X, Y）を保持する変数
@@ -118,49 +124,71 @@ public class PlayerController : MonoBehaviour
     private void DoInteract()
     {
         // 1. 発射地点（胸の高さ）
-        Vector3 rayOrigin = transform.position + Vector3.up * 0.75f;
+        Vector3 rayOrigin = transform.position + Vector3.up * 1f;
 
-        // 2. 発射方向を計算（まっすぐ前 + 設定した上向きの角度）
+        // 2. 基本の方向ベクトルを計算
         Vector3 forward = transform.forward;
-        Vector3 upward = transform.up * verticalAngle; // verticalAngleはインスペクタで設定
-        Vector3 direction = (forward + upward).normalized;
+        Vector3 upward = transform.up * verticalAngle;
+        Vector3 downward = -transform.up * verticalAngle;
+        Vector3 right = transform.right * interactWidth;
+        Vector3 left = -transform.right * interactWidth;
 
-        // 1本のレーザーを視覚的にデバッグ表示する (Sceneビューで確認できます)
-        Debug.DrawRay(rayOrigin, direction * interactDistance, Color.red, 1.0f);
+        // 3. 5つの最終的な「発射方向」を計算
+        Vector3 centerDir = forward.normalized;
+        Vector3 upDir = (forward + upward).normalized;
+        Vector3 downDir = (forward + downward).normalized;
+        Vector3 rightDir = (forward + right).normalized;
+        Vector3 leftDir = (forward + left).normalized;
 
+        // 5方向を視覚的にデバッグ表示する (Sceneビューで確認できます)
+        Debug.DrawRay(rayOrigin, centerDir * interactDistance, Color.red, 1.0f);    // 真ん中 = 赤
+        Debug.DrawRay(rayOrigin, upDir * interactDistance, Color.yellow, 1.0f);     // 上 = 黄色
+        Debug.DrawRay(rayOrigin, downDir * interactDistance, Color.yellow, 1.0f);     // 下 = 黄色
+        Debug.DrawRay(rayOrigin, rightDir * interactDistance, Color.cyan, 1.0f);      // 右 = 水色
+        Debug.DrawRay(rayOrigin, leftDir * interactDistance, Color.cyan, 1.0f);      // 左 = 水色
+
+        // 1. まずは「真ん中」を調べる
+        if (CheckRay(rayOrigin, centerDir)) return;
+
+        // 2. もしダメなら「上」を調べる
+        if (CheckRay(rayOrigin, upDir)) return;
+
+        // 3. もしダメなら「下」を調べる
+        if (CheckRay(rayOrigin, downDir)) return;
+
+        // 4. もしダメなら「右」を調べる
+        if (CheckRay(rayOrigin, rightDir)) return;
+
+        // 5. もしダメなら「左」を調べる
+        if (CheckRay(rayOrigin, leftDir)) return;
+
+        // 5本とも当たらなかった
+        Debug.Log("目の前に何もない");
+    }
+
+    // Raycastのチェック処理（GetComponentInParentを使う最終版）
+    private bool CheckRay(Vector3 origin, Vector3 direction)
+    {
         RaycastHit hit;
-        // 3. 1本のレーザーを発射する
-        if (Physics.Raycast(rayOrigin, direction, out hit, interactDistance, interactableLayer))
+        if (Physics.Raycast(origin, direction, out hit, interactDistance, interactableLayer))
         {
             // "Interactable" レイヤーの何かにヒットした！
-            Debug.Log("Raycastがヒットしました！ ヒットしたオブジェクト: " + hit.collider.name);
-
-            // 4. まず、ヒットしたオブジェクト自身を調べる
             IInteracttable interactable = hit.collider.GetComponent<IInteracttable>();
 
             if (interactable == null)
             {
-                // 5. もし持ってなかったら、代わりに親オブジェクトを調べる
+                // ヒットしたのが子オブジェクトだった場合、親を探す
                 interactable = hit.collider.GetComponentInParent<IInteracttable>();
             }
 
             if (interactable != null)
             {
-                // 6. 見つかった！ 相手のInteract()関数を呼び出す
-                Debug.Log(hit.collider.name + " の親から IInteracttable スクリプトを見つけました！");
+                // 見つかった！
                 interactable.Interact();
-            }
-            else
-            {
-                // 親オブジェクトにもスクリプトがなかった場合
-                Debug.LogWarning(hit.collider.name + " とその親は IInteracttable スクリプトを持っていません。");
+                return true; // ヒットした
             }
         }
-        else
-        {
-            // 目の前には何もない
-            Debug.Log("目の前に何もない");
-        }
+        return false; // ヒットしなかった
     }
 
 }
