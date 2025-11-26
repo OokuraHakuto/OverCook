@@ -30,6 +30,14 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb; // 物理演算を管理するRigidbodyコンポーネント
     private Vector2 moveInput; // 移動入力（X, Y）を保持する変数
 
+    private Animator anim;
+
+    [Header("アイテム保持設定")]
+    public Transform handPosition; // アイテムを持つ位置（インスペクタで設定）
+    public GameObject heldItem;    // 今持っているアイテム（内部用）
+
+
+
 
     //#if falseにすると完成版の方のデバッグができるs
 #if UNITY_EDITOR // ▼▼▼ Unityエディタで実行している時だけ、この部分が有効になる ▼▼▼
@@ -96,6 +104,8 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+
+        anim = GetComponent<Animator>();
     }
 
 
@@ -110,11 +120,14 @@ public class PlayerController : MonoBehaviour
         rb.velocity = movement.normalized * moveSpeed;
 
         // キャラクターの向きを入力方向に合わせる（入力がある時だけ）
+        if (anim != null)
+        {
+            anim.SetFloat("Speed", movement.magnitude);
+        }
+
         if (movement != Vector3.zero)
         {
-            // 向きたい方向を計算
             Quaternion targetRotation = Quaternion.LookRotation(movement);
-            // 現在の向きから目標の向きへ、指定した速さで滑らかに回転させる
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
         }
     }
@@ -189,6 +202,56 @@ public class PlayerController : MonoBehaviour
             }
         }
         return false; // ヒットしなかった
+    }
+
+
+    //アイテムを持つ関数
+    public void HoldItem(GameObject itemPrefab)
+    {
+        if (heldItem != null) return; // 既に何か持っていたら持てない
+
+        // 手の位置にアイテムを生成
+        heldItem = Instantiate(itemPrefab, handPosition);
+
+        // 位置と回転をリセット
+        heldItem.transform.localPosition = Vector3.zero;
+        heldItem.transform.localRotation = Quaternion.identity;
+
+        // 持ったアイテムがプレイヤーに当たって暴れないように、物理演算を無効化
+        Rigidbody itemRb = heldItem.GetComponent<Rigidbody>();
+        if (itemRb != null) itemRb.isKinematic = true;
+
+        Collider itemCol = heldItem.GetComponent<Collider>();
+        if (itemCol != null) itemCol.enabled = false;
+
+        if (anim != null)
+        {
+            anim.SetBool("IsHolding", true);
+            anim.SetTrigger("Pick"); // 拾うモーションも再生するなら
+        }
+    }
+
+
+    // 外部（ボウルやゴミ箱など）から呼ばれる：持っているアイテムを渡す（消す）
+    // 戻り値として「渡したアイテムの名前」を返す
+    public string GiveItem()
+    {
+        if (heldItem == null) return ""; // 何も持っていない
+
+        // アイテムの名前を取得（"(Clone)"という文字を削除して綺麗にする）
+        string itemName = heldItem.name.Replace("(Clone)", "");
+
+        // 手元のアイテムを削除
+        Destroy(heldItem);
+        heldItem = null;
+
+        if (anim != null)
+        {
+            anim.SetBool("IsHolding", false);
+            anim.SetTrigger("Put"); // 置くモーションも再生するなら
+        }
+
+        return itemName;
     }
 
 }
