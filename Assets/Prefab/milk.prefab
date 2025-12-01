@@ -52,6 +52,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: milk
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7ba43cb6e83f4bd489438c2b5c94eaf1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 7ba43cb6e83f4bd489438c2b5c94eaf1, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -59,6 +67,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7ba43cb6e83f4bd489438c2b5c94eaf1, type: 3}
       insertIndex: -1
       addedObject: {fileID: -2077386288127973422}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7ba43cb6e83f4bd489438c2b5c94eaf1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2324092386161152313}
   m_SourcePrefab: {fileID: 100100000, guid: 7ba43cb6e83f4bd489438c2b5c94eaf1, type: 3}
 --- !u!1 &5650174205350672170 stripped
 GameObject:
@@ -86,3 +97,17 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 6.5, y: 4, z: 4}
   m_Center: {x: 0, y: 2, z: 0.2}
+--- !u!114 &2324092386161152313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5650174205350672170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5825e441ca471ec4db61b747cc2fe237, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemPrefab: {fileID: 7500929557964159404, guid: d62dba9d1fe8886448b08e6e3517dfca, type: 3}
+  ingredientName: Milk

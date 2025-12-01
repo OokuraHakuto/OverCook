@@ -52,6 +52,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: zairyouokiba
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1bf13373185bd8e4da67d91ced05f144, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 1bf13373185bd8e4da67d91ced05f144, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -59,6 +67,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1bf13373185bd8e4da67d91ced05f144, type: 3}
       insertIndex: -1
       addedObject: {fileID: -3825923239633870590}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1bf13373185bd8e4da67d91ced05f144, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6362710767081597694}
   m_SourcePrefab: {fileID: 100100000, guid: 1bf13373185bd8e4da67d91ced05f144, type: 3}
 --- !u!1 &6917403047524396363 stripped
 GameObject:
@@ -86,3 +97,17 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.2, y: 3.2, z: 3.2}
   m_Center: {x: 0, y: 1.6, z: 0}
+--- !u!114 &6362710767081597694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6917403047524396363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5825e441ca471ec4db61b747cc2fe237, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemPrefab: {fileID: 162547203576833207, guid: 880514c9fd3aa7e43bedb2e06cf1df7e, type: 3}
+  ingredientName: Vanilla

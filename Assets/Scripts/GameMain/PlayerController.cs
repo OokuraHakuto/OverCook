@@ -254,4 +254,31 @@ public class PlayerController : MonoBehaviour
         return itemName;
     }
 
+    //シーンにある実物を拾う関数
+    public void PickUpItem(GameObject targetItem)
+    {
+        if (heldItem != null) return; // 既に何か持っていたら拾えない
+
+        heldItem = targetItem; // 持つアイテムを登録
+
+        // 手の位置に移動＆親子関係を設定（これでプレイヤーについてくる）
+        heldItem.transform.SetParent(handPosition);
+        heldItem.transform.localPosition = Vector3.zero;
+        heldItem.transform.localRotation = Quaternion.identity;
+
+        // 物理演算と当たり判定を無効化（持っている間は暴れないように）
+        Rigidbody itemRb = heldItem.GetComponent<Rigidbody>();
+        if (itemRb != null) itemRb.isKinematic = true;
+
+        Collider itemCol = heldItem.GetComponent<Collider>();
+        if (itemCol != null) itemCol.enabled = false;
+
+        // アニメーション更新
+        if (anim != null)
+        {
+            anim.SetBool("IsHolding", true);
+            anim.SetTrigger("Pick");
+        }
+    }
+
 }
