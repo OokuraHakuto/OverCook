@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -16,18 +14,23 @@ public class Cursor : MonoBehaviour
     int siin;
     public float anten = 0;
 
+    public AudioSource AS;
+    public AudioClip OK, back,choose;
+
     void Update()
     {
         if (place == 1)
         {
             if (Input.GetKeyDown("d"))
             {
+                AS.PlayOneShot(choose);
                 cursor.transform.DOLocalMove(new Vector3(6.5f, -2.89f, -1f), 0.1f).SetLoops(1, LoopType.Incremental);
                 //go2Title.
                 place = 2;
             }
-            if (Input.GetKey("e"))
+            if (Input.GetKeyDown("e"))
             {
+                AS.PlayOneShot(OK);
                 siin = 1;
                 idou = true;
             }
@@ -36,11 +39,13 @@ public class Cursor : MonoBehaviour
         {
             if (Input.GetKeyDown("a"))
             {
+                AS.PlayOneShot(choose);
                 cursor.transform.DOLocalMove(new Vector3(1.49f, -2.89f, -1f), 0.1f).SetLoops(1, LoopType.Incremental);
                 place = 1;
             }
-            if (Input.GetKey("e"))
+            if (Input.GetKeyDown("e"))
             {
+                AS.PlayOneShot(back);
                 siin = 2;
                 idou = true;
             }
@@ -54,9 +59,6 @@ public class Cursor : MonoBehaviour
 
     public void Go2Scene(int num)
     {
-        Debug.Log("aicfvasdnplod");
-
-
         if (anten < 1)
         {
             Color kura = anmaku.color;
