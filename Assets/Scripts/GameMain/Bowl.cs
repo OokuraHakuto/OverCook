@@ -16,6 +16,7 @@ public class Bowl : MonoBehaviour, IInteracttable
     public bool isMelted = false; // レンチン完了
     public bool isMixed = false;  // 混ぜ完了
     public bool isFrozen = false; // 冷凍完了（完成）
+    public bool isBurnt = false;  // 焦げフラグ
 
     void Start()
     {
@@ -114,21 +115,29 @@ public class Bowl : MonoBehaviour, IInteracttable
 
         contentSphere.SetActive(true);
 
-        // 色の分岐（仮）
-        if (hasMilk && hasVanilla)
+        // ▼ 状態によって色を変える
+        if (isBurnt)
         {
-            // 両方入った（レンチン準備OK）
-            sphereRenderer.material.color = Color.white;
+            // ★焦げた色（黒）
+            sphereRenderer.material.color = Color.black;
+        }
+        else if (isMelted)
+        {
+            // 溶けた色（例：茶色っぽくする、または濃いクリーム色）
+            sphereRenderer.material.color = new Color(1.0f, 0.8f, 0.6f);
+        }
+        else if (hasMilk && hasVanilla)
+        {
+            // 準備OKの色（白）
+            sphereRenderer.material.color = new Color(1.0f, 0.9f, 0.7f);
         }
         else if (hasMilk)
         {
-            // 牛乳だけ
-            sphereRenderer.material.color = new Color(0.9f, 0.9f, 1f);
+            sphereRenderer.material.color = Color.white;
         }
         else if (hasVanilla)
         {
-            // バニラだけ
-            sphereRenderer.material.color = new Color(1f, 1f, 0.6f);
+            sphereRenderer.material.color = new Color(1.0f, 0.8f, 0.2f);
         }
     }
 
@@ -150,4 +159,28 @@ public class Bowl : MonoBehaviour, IInteracttable
         }
         return closest;
     }
+
+    public void Cook()
+    {
+        isMelted = true; // 溶けたフラグON
+        Debug.Log("ボウルの中身が溶けました！");
+        UpdateVisual(); // 見た目更新
+    }
+
+    public bool IsReadyToCook()
+    {
+        // 牛乳とバニラの両方が入っていて、まだ溶けてなければOK
+        // (将来的に味が増えたら、ここを「材料カウント >= 2」などに変えればOK)
+        return hasMilk && hasVanilla && !isMelted;
+    }
+
+    public void Burn()
+    {
+        isBurnt = true;
+        // isMelted = false; // 焦げたら「溶けた」扱いではなく「失敗」扱いにするなら
+        Debug.Log("真っ黒焦げだ！！");
+        UpdateVisual();
+    }
+
+
 }

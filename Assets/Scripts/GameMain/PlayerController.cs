@@ -218,8 +218,11 @@ public class PlayerController : MonoBehaviour
         heldItem.transform.localRotation = Quaternion.identity;
 
         // 持ったアイテムがプレイヤーに当たって暴れないように、物理演算を無効化
-        Rigidbody itemRb = heldItem.GetComponent<Rigidbody>();
-        if (itemRb != null) itemRb.isKinematic = true;
+        Collider[] cols = heldItem.GetComponentsInChildren<Collider>();
+        foreach (Collider c in cols)
+        {
+            c.enabled = false;
+        }
 
         Collider itemCol = heldItem.GetComponent<Collider>();
         if (itemCol != null) itemCol.enabled = false;
@@ -266,18 +269,34 @@ public class PlayerController : MonoBehaviour
         heldItem.transform.localPosition = Vector3.zero;
         heldItem.transform.localRotation = Quaternion.identity;
 
+        heldItem.transform.localScale = Vector3.one;
+
         // 物理演算と当たり判定を無効化（持っている間は暴れないように）
         Rigidbody itemRb = heldItem.GetComponent<Rigidbody>();
         if (itemRb != null) itemRb.isKinematic = true;
 
-        Collider itemCol = heldItem.GetComponent<Collider>();
-        if (itemCol != null) itemCol.enabled = false;
+        Collider[] cols = heldItem.GetComponentsInChildren<Collider>();
+        foreach (Collider c in cols)
+        {
+            c.enabled = false;
+        }
 
         // アニメーション更新
         if (anim != null)
         {
             anim.SetBool("IsHolding", true);
             anim.SetTrigger("Pick");
+        }
+    }
+
+    public void ReleaseItem()
+    {
+        heldItem = null; // 参照を切るだけ（オブジェクトは消さない）
+
+        if (anim != null)
+        {
+            anim.SetBool("IsHolding", false);
+            anim.SetTrigger("Put");
         }
     }
 
