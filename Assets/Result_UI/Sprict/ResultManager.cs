@@ -1,6 +1,4 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,6 +10,8 @@ public class ResultManager : MonoBehaviour
     bool twinkF1, twinkF2, twinkF3;
     public Sprite twink, blank;
     public Text scoreText;
+    public AudioSource AS;
+    public AudioClip hoshi1, hoshi2, hoshi3;
 
     void Start()
     {
@@ -22,6 +22,7 @@ public class ResultManager : MonoBehaviour
     {
         if (scoreSlider.value >= 500 && twinkF1 == false)
         {
+            AS.PlayOneShot(hoshi1);
             star1.sprite = twink;
             star1.transform.DOPunchScale(new Vector3(-1f, -1f, -1f), 1f);
             twinkF1 = true;
@@ -29,6 +30,7 @@ public class ResultManager : MonoBehaviour
 
         if (scoreSlider.value >= 1000 && twinkF2 == false)
         {
+            AS.PlayOneShot(hoshi2);
             star2.sprite = twink;
             star2.transform.DOPunchScale(new Vector3(-1f, -1f, -1f), 1f);
             twinkF2 = true;
@@ -36,6 +38,7 @@ public class ResultManager : MonoBehaviour
 
         if (scoreSlider.value >= 1500 && twinkF3 == false)
         {
+            AS.PlayOneShot(hoshi3);
             star3.sprite = twink;
             star3.transform.DOPunchScale(new Vector3(-1f, -1f, -1f), 1f);
             twinkF3 = true;
