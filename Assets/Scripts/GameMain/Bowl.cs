@@ -102,6 +102,21 @@ public class Bowl : MonoBehaviour, IInteracttable
         }
     }
 
+    // 混ぜ完了時に呼ばれる関数
+    public void MixComplete()
+    {
+        isMixed = true;
+        Debug.Log("ボウルの中身が混ざりました！");
+        UpdateVisual();
+    }
+
+    // 混ぜる工程に進んでいいかどうか
+    public bool IsReadyToMix()
+    {
+        // 溶けていて(isMelted)、まだ混ぜていない(isMixedがfalse)ならOK
+        return isMelted && !isMixed;
+    }
+
     // 見た目の更新
     public void UpdateVisual()
     {
@@ -115,11 +130,19 @@ public class Bowl : MonoBehaviour, IInteracttable
 
         contentSphere.SetActive(true);
 
-        // ▼ 状態によって色を変える
+        // 優先順位： 焦げ > 冷凍(完成) > 混ぜ(New!) > 溶け > 材料
         if (isBurnt)
         {
-            // ★焦げた色（黒）
             sphereRenderer.material.color = Color.black;
+        }
+        else if (isFrozen) // ※冷凍はまだ作ってませんが場所だけ
+        {
+            sphereRenderer.material.color = new Color(0.5f, 0.8f, 1.0f); // アイスっぽい色
+        }
+        else if (isMixed)
+        {
+            // 混ぜると少し白っぽく、ふんわりした色になるイメージ
+            sphereRenderer.material.color = new Color(1.0f, 0.95f, 0.8f);
         }
         else if (isMelted)
         {
