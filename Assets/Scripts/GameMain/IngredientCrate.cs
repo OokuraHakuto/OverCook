@@ -25,7 +25,7 @@ public class IngredientCrate : MonoBehaviour, IInteracttable
             {
                 // ★持っているのが「ボウル」だった場合
                 // → ボウルの中に材料を入れる
-                bool added = heldBowl.AddIngredient(ingredientName);
+                bool added = heldBowl.AddIngredient(itemPrefab);
 
                 if (added) Debug.Log("ボウルに " + ingredientName + " を入れました！");
                 else Debug.Log("そのボウルには入りません");

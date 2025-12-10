@@ -32,25 +32,85 @@ public class Counter : MonoBehaviour, IInteracttable
         if (player == null) return;
 
         // =========================================================
-        // パターンA：台に何か置いてある場合 → プレイヤーが取る
+        // パターンA：台に何か置いてある場合
         // =========================================================
         if (heldItem != null)
         {
-            // プレイヤーが手ぶらなら
+            // --- ケース1：プレイヤーが手ぶら（アイテムを拾う） ---
             if (player.heldItem == null)
             {
-                // コライダーを復活させてから渡す
+                // コライダーを復活
                 Collider[] cols = heldItem.GetComponentsInChildren<Collider>();
                 foreach (Collider c in cols) c.enabled = true;
 
                 player.PickUpItem(heldItem);
-                heldItem = null; // 台は空になる
+
+                // ★スケール修正：拾う前に「手持ち時のスケール」に戻す
+                ItemSettings settings = heldItem.GetComponent<ItemSettings>();
+                if (settings != null)
+                {
+                    // 設定された「持った時のサイズ」にする
+                    heldItem.transform.localScale = settings.onPlayerScale;
+                }
+                else
+                {
+                    // 設定がついてないアイテムならとりあえず (1,1,1) に戻す
+                    heldItem.transform.localScale = Vector3.one;
+                }
+
+                heldItem = null;
                 Debug.Log("台からアイテムを取りました");
             }
+            // --- ケース2：プレイヤーが何か持っている（合体・投入処理） ---
             else
             {
-                Debug.Log("手がふさがっています！");
-                // ※将来的に、ここで「皿と食材を合体させる」処理などを追加できます
+                // 机に乗っているのがボウルか確認
+                Bowl bowl = heldItem.GetComponent<Bowl>();
+
+                // ★追加：持っているのが「泡だて器」かどうかチェック
+                Whisk whisk = player.heldItem.GetComponent<Whisk>();
+
+                // ---------------------------------------------------------
+                // パターンA：泡だて器を持っていて、机にボウルがある場合 → 「混ぜる」
+                // ---------------------------------------------------------
+                if (whisk != null && bowl != null)
+                {
+                    // 混ぜられる状態（溶けている＆まだ混ざってない）か確認
+                    if (bowl.IsReadyToMix())
+                    {
+                        // 混ぜる処理を実行（1回カウントを進める）
+                        bowl.AddMixProgress();
+
+                        // ※ここに「泡だて器を振るアニメーション」などを入れると完璧
+                    }
+                    else
+                    {
+                        if (bowl.isMixed) Debug.Log("もう混ざっています");
+                        else Debug.Log("まだ溶けていません（レンジへ！）");
+                    }
+                }
+                // ---------------------------------------------------------
+                // パターンB：泡だて器以外のものを持っている場合 → 「食材を入れる」
+                // ---------------------------------------------------------
+                else if (bowl != null)
+                {
+                    // (GameObjectをそのまま渡す)
+                    bool success = bowl.AddIngredient(player.heldItem);
+
+                    if (success)
+                    {
+                        // 成功したらプレイヤーの手元からアイテムを消す
+                        GameObject ingredient = player.heldItem;
+                        player.ReleaseItem(); // プレイヤーの手を空にする
+                        Destroy(ingredient);  // オブジェクトを破壊
+
+                        Debug.Log("調理アクション成功：ボウルに入れました");
+                        return; // ここで処理終了
+                    }
+                }
+
+                // どちらでもない場合
+                Debug.Log("手がふさがっており、アクションできませんでした！");
             }
         }
         // =========================================================
@@ -58,26 +118,34 @@ public class Counter : MonoBehaviour, IInteracttable
         // =========================================================
         else
         {
-            // プレイヤーが何か持っているなら
+            // 置けない設定ならここで弾く
+            if (!canPlaceItem) return;
+
             if (player.heldItem != null)
             {
-                // 手放させる（参照を切る）
                 GameObject itemToPlace = player.heldItem;
                 player.ReleaseItem();
 
-                // 台の上に移動
                 itemToPlace.transform.SetParent(holdPoint);
                 itemToPlace.transform.localPosition = Vector3.zero;
                 itemToPlace.transform.localRotation = Quaternion.identity;
 
-                // スケールを元に戻す（念のため）
-                itemToPlace.transform.localScale = Vector3.one;
+                // ★スケール修正：机に置くときのサイズを適用
+                ItemSettings settings = itemToPlace.GetComponent<ItemSettings>();
+                if (settings != null)
+                {
+                    itemToPlace.transform.localScale = settings.onTableScale;
+                }
+                else
+                {
+                    itemToPlace.transform.localScale = Vector3.one;
+                }
 
-                // ★重要：置いてある間もインタラクトできるようにコライダーを復活させる
+                // 机の上にある間は、誤操作防止のためコライダーを切るのが一般的ですが
+                // 復活させたいとのことなので、ここはそのままにします
                 Collider[] cols = itemToPlace.GetComponentsInChildren<Collider>();
                 foreach (Collider c in cols) c.enabled = true;
 
-                // 台が記憶する
                 heldItem = itemToPlace;
                 Debug.Log("台に置きました");
             }
