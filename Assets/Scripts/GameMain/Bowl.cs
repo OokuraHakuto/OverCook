@@ -1,4 +1,3 @@
-using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,11 +18,6 @@ public class Bowl : MonoBehaviour, IInteracttable
     public bool isFrozen = false; // 冷凍完了（完成）
     public bool isBurnt = false;  // 焦げフラグ
 
-    // 混ぜる連打カウント用
-    [Header("ミキサー設定")]
-    public int mixClicksNeeded = 15; // 完了までに必要なクリック数
-    private int currentMixClicks = 0;
-
     void Start()
     {
         if (contentSphere != null)
@@ -33,36 +27,30 @@ public class Bowl : MonoBehaviour, IInteracttable
         }
     }
 
-    // ▼▼▼ 修正：GameObjectを直接受け取る形に変更 ▼▼▼
-    public bool AddIngredient(GameObject item)
+    // ▼▼▼ 追加：材料を受け入れる関数 ▼▼▼
+    public bool AddIngredient(string ingredient)
     {
         // 既にレンチン済みなら、もう材料は足せない
         if (isMelted) return false;
 
-        // "(Clone)" という文字がついていると判定に失敗するので削除してきれいにする
-        string itemName = item.name.Replace("(Clone)", "").Trim();
-
         bool success = false;
 
-        // プレハブ名 "Item_Milk" や "Item_Vanilla" に合わせて判定
-        if (itemName == "Item_Milk" && !hasMilk)
+        if (ingredient == "Milk" && !hasMilk)
         {
             hasMilk = true;
             success = true;
-            Debug.Log("ボウルに牛乳が入りました！");
         }
-        else if (itemName == "Item_Vanilla" && !hasVanilla)
+        else if (ingredient == "Vanilla" && !hasVanilla)
         {
             hasVanilla = true;
             success = true;
-            Debug.Log("ボウルにバニラが入りました！");
         }
 
         if (success)
         {
             UpdateVisual();
         }
-        return success; // 入ったらtrueを返す
+        return success; // 「入れたよ」か「入れられなかったよ」を返す
     }
 
     // プレイヤーが手ぶらでインタラクトしたら、ボウルを持たせる
@@ -111,27 +99,6 @@ public class Bowl : MonoBehaviour, IInteracttable
         {
             player.PickUpItem(this.gameObject);
             Debug.Log("ボウルを拾いました！");
-        }
-    }
-
-    // 外から「混ぜる」を進める関数
-    public void AddMixProgress()
-    {
-        // 1. 混ぜられる状態かチェック
-        if (!IsReadyToMix()) return;
-
-        // 2. カウントを進める
-        currentMixClicks++;
-        Debug.Log($"混ぜています... {currentMixClicks}/{mixClicksNeeded}");
-
-        // 演出
-        // 簡易演出：ボウルを少し揺らす
-        transform.DOShakePosition(0.1f, 0.05f); // ※DOTweenなどを使っていればですが、なければ無視でOK
-
-        // 3. 規定回数に達したら完了
-        if (currentMixClicks >= mixClicksNeeded)
-        {
-            MixComplete();
         }
     }
 

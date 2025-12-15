@@ -19,7 +19,7 @@ public class GaugeManager2 : MonoBehaviour
         time = 0;
         slider1.value = 0;
 
-        col = new Color(0, 1, 0);
+        col = new Color(1, 1, 0);
         fillArea.color = col;
     }
 
@@ -31,14 +31,9 @@ public class GaugeManager2 : MonoBehaviour
         {
             slider1.value = time;
         }
-        else if (time <= 7.5f)
-        {
-            col.r = 1 * ((time-5) / 2.5f);
-            fillArea.color = col;
-        }
         else if (time <= 10)
         {
-            col.g = 1 * ((10-time) / 2.5f);
+            col.g = 1 * ((10-time) / 5);
             fillArea.color = col;
         }
         else
