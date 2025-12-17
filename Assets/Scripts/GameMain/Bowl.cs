@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚Ä‚¢‚Ü‚·j
+public class Bowl : MonoBehaviour, IInteracttable
 {
     [Header("’†g‚Ì•\¦—p")]
     public GameObject contentSphere;
@@ -13,14 +13,10 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
     public bool hasVanilla = false;
 
     // --- ’²—‚Ìisó‹µ ---
-    public bool isMelted = false; // —n‚¯‚½
-    public bool isMixed = false;  // ¬‚´‚Á‚½
-    public bool isFrozen = false; // “€‚Á‚½
-    public bool isBurnt = false;  // Å‚°‚½
-
-    [Header("ƒ~ƒLƒT[İ’è")]
-    public int mixClicksNeeded = 5; // Š®—¹‚Ü‚Å‚É•K—v‚ÈƒNƒŠƒbƒN”
-    private int currentMixClicks = 0;
+    public bool isMelted = false; // ƒŒƒ“ƒ`ƒ“Š®—¹
+    public bool isMixed = false;  // ¬‚ºŠ®—¹
+    public bool isFrozen = false; // —â“€Š®—¹iŠ®¬j
+    public bool isBurnt = false;  // Å‚°ƒtƒ‰ƒO
 
     void Start()
     {
@@ -31,36 +27,82 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
         }
     }
 
-    // Ş—¿‚ğ“ü‚ê‚éˆ—
-    public bool AddIngredient(GameObject item)
+    // ¥¥¥ ’Ç‰ÁFŞ—¿‚ğó‚¯“ü‚ê‚éŠÖ” ¥¥¥
+    public bool AddIngredient(string ingredient)
     {
+        // Šù‚ÉƒŒƒ“ƒ`ƒ“Ï‚İ‚È‚çA‚à‚¤Ş—¿‚Í‘«‚¹‚È‚¢
         if (isMelted) return false;
 
-        // (Clone)‚Ì•¶š‚ğÁ‚µ‚Ä–¼‘O”»’è
-        string itemName = item.name.Replace("(Clone)", "").Trim();
         bool success = false;
 
-        if (itemName == "Item_Milk" && !hasMilk) { hasMilk = true; success = true; }
-        else if (itemName == "Item_Vanilla" && !hasVanilla) { hasVanilla = true; success = true; }
+        if (ingredient == "Milk" && !hasMilk)
+        {
+            hasMilk = true;
+            success = true;
+        }
+        else if (ingredient == "Vanilla" && !hasVanilla)
+        {
+            hasVanilla = true;
+            success = true;
+        }
 
-        if (success) UpdateVisual();
-        return success;
+        if (success)
+        {
+            UpdateVisual();
+        }
+        return success; // u“ü‚ê‚½‚æv‚©u“ü‚ê‚ç‚ê‚È‚©‚Á‚½‚æv‚ğ•Ô‚·
     }
 
-    // ¬‚º‚éˆ—iŠO•”‚©‚çŒÄ‚Î‚ê‚éj
-    public void AddMixProgress()
+    // ƒvƒŒƒCƒ„[‚ªè‚Ô‚ç‚ÅƒCƒ“ƒ^ƒ‰ƒNƒg‚µ‚½‚çAƒ{ƒEƒ‹‚ğ‚½‚¹‚é
+    public void Interact()
     {
-        if (!IsReadyToMix()) return;
+        Debug.Log("Bowl‚ÌInteract‚ªŒÄ‚Î‚ê‚Ü‚µ‚½"); // “®ìŠm”F—pƒƒO
 
-        currentMixClicks++;
-        Debug.Log($"¬‚º‚Ä‚¢‚Ü‚·... {currentMixClicks}/{mixClicksNeeded}");
+        PlayerController player = FindClosestPlayer();
 
-        if (currentMixClicks >= mixClicksNeeded)
+        if (player == null)
         {
-            MixComplete();
+            Debug.LogError("ƒvƒŒƒCƒ„[‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñi‹——£‚ª‰“‚¢Hj");
+            return;
+        }
+
+        // ---------------------------------------------------------
+        // ƒpƒ^[ƒ“AFƒvƒŒƒCƒ„[‚ªu‰½‚©v‚ğ‚Á‚Ä‚¢‚éê‡ ¨ ƒ{ƒEƒ‹‚É“ü‚ê‚é
+        // ---------------------------------------------------------
+        if (player.heldItem != null)
+        {
+            // ƒvƒŒƒCƒ„[‚©‚çƒAƒCƒeƒ€‚ğó‚¯æ‚Á‚ÄiÁ‚µ‚ÄjA–¼‘O‚ğæ“¾
+            string itemName = player.GiveItem();
+            Debug.Log("“Š“ü‚³‚ê‚½ƒAƒCƒeƒ€–¼: " + itemName);
+
+            if (itemName == "Item_Milk") // ¦ƒvƒŒƒtƒ@ƒu–¼‚ÆŠ®‘Sˆê’v‚³‚¹‚éI
+            {
+                hasMilk = true;
+                Debug.Log("ƒ{ƒEƒ‹‚É‹“û‚ª“ü‚è‚Ü‚µ‚½I");
+                UpdateVisual();
+            }
+            else if (itemName == "Item_Vanilla") // ¦ƒvƒŒƒtƒ@ƒu–¼‚ÆŠ®‘Sˆê’v‚³‚¹‚éI
+            {
+                hasVanilla = true;
+                Debug.Log("ƒ{ƒEƒ‹‚Éƒoƒjƒ‰‚ª“ü‚è‚Ü‚µ‚½I");
+                UpdateVisual();
+            }
+            else
+            {
+                Debug.LogWarning("‚»‚ÌƒAƒCƒeƒ€ (" + itemName + ") ‚Íƒ{ƒEƒ‹‚É“ü‚ê‚ç‚ê‚Ü‚¹‚ñ");
+            }
+        }
+        // ---------------------------------------------------------
+        // ƒpƒ^[ƒ“BFƒvƒŒƒCƒ„[‚ªuè‚Ô‚çv‚Ìê‡ ¨ ƒ{ƒEƒ‹‚ğE‚¤
+        // ---------------------------------------------------------
+        else
+        {
+            player.PickUpItem(this.gameObject);
+            Debug.Log("ƒ{ƒEƒ‹‚ğE‚¢‚Ü‚µ‚½I");
         }
     }
 
+    // ¬‚ºŠ®—¹‚ÉŒÄ‚Î‚ê‚éŠÖ”
     public void MixComplete()
     {
         isMixed = true;
@@ -68,79 +110,100 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
         UpdateVisual();
     }
 
+    // ¬‚º‚éH’ö‚Éi‚ñ‚Å‚¢‚¢‚©‚Ç‚¤‚©
     public bool IsReadyToMix()
     {
+        // —n‚¯‚Ä‚¢‚Ä(isMelted)A‚Ü‚¾¬‚º‚Ä‚¢‚È‚¢(isMixed‚ªfalse)‚È‚çOK
         return isMelted && !isMixed;
     }
 
-    // Œ©‚½–ÚXV
+    // Œ©‚½–Ú‚ÌXV
     public void UpdateVisual()
     {
         if (contentSphere == null) return;
 
         if (!hasMilk && !hasVanilla)
         {
-            contentSphere.SetActive(false);
+            contentSphere.SetActive(false); // ‹ó‚Á‚Û
             return;
         }
+
         contentSphere.SetActive(true);
 
-        if (isBurnt) sphereRenderer.material.color = Color.black;
-        else if (isFrozen) sphereRenderer.material.color = new Color(0.5f, 0.8f, 1.0f);
-        else if (isMixed) sphereRenderer.material.color = new Color(1.0f, 0.95f, 0.8f);
-        else if (isMelted) sphereRenderer.material.color = new Color(1.0f, 0.8f, 0.6f);
-        else if (hasMilk && hasVanilla) sphereRenderer.material.color = new Color(1.0f, 0.9f, 0.7f);
-        else if (hasMilk) sphereRenderer.material.color = Color.white;
-        else if (hasVanilla) sphereRenderer.material.color = new Color(1.0f, 0.8f, 0.2f);
+        // —Dæ‡ˆÊF Å‚° > —â“€(Š®¬) > ¬‚º(New!) > —n‚¯ > Ş—¿
+        if (isBurnt)
+        {
+            sphereRenderer.material.color = Color.black;
+        }
+        else if (isFrozen) // ¦—â“€‚Í‚Ü‚¾ì‚Á‚Ä‚Ü‚¹‚ñ‚ªêŠ‚¾‚¯
+        {
+            sphereRenderer.material.color = new Color(0.5f, 0.8f, 1.0f); // ƒAƒCƒX‚Á‚Û‚¢F
+        }
+        else if (isMixed)
+        {
+            // ¬‚º‚é‚Æ­‚µ”’‚Á‚Û‚­A‚Ó‚ñ‚í‚è‚µ‚½F‚É‚È‚éƒCƒ[ƒW
+            sphereRenderer.material.color = new Color(1.0f, 0.95f, 0.8f);
+        }
+        else if (isMelted)
+        {
+            // —n‚¯‚½Fi—áF’ƒF‚Á‚Û‚­‚·‚éA‚Ü‚½‚Í”Z‚¢ƒNƒŠ[ƒ€Fj
+            sphereRenderer.material.color = new Color(1.0f, 0.8f, 0.6f);
+        }
+        else if (hasMilk && hasVanilla)
+        {
+            // €”õOK‚ÌFi”’j
+            sphereRenderer.material.color = new Color(1.0f, 0.9f, 0.7f);
+        }
+        else if (hasMilk)
+        {
+            sphereRenderer.material.color = Color.white;
+        }
+        else if (hasVanilla)
+        {
+            sphereRenderer.material.color = new Color(1.0f, 0.8f, 0.2f);
+        }
     }
 
-    // ƒCƒ“ƒ^ƒ‰ƒNƒgi’¼ÚG‚Á‚½ê‡j
-    public void Interact()
-    {
-        PlayerController player = FindClosestPlayer();
-        if (player == null) return;
-
-        if (player.heldItem != null)
-        {
-            if (AddIngredient(player.heldItem))
-            {
-                GameObject item = player.heldItem;
-                player.ReleaseItem();
-                Destroy(item);
-            }
-        }
-        else
-        {
-            player.PickUpItem(this.gameObject);
-        }
-    }
-
-    // ƒvƒŒƒCƒ„[’Tõ
-    private PlayerController FindClosestPlayer()
+    // (FindClosestPlayer‚ÍÈ—ª...)
+    private PlayerController FindClosestPlayer() 
     {
         PlayerController[] players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
         PlayerController closest = null;
         float minDistance = 6.0f;
-        foreach (var p in players) { float dist = Vector3.Distance(transform.position, p.transform.position); if (dist < minDistance) { minDistance = dist; closest = p; } }
+
+        foreach (var p in players)
+        {
+            float dist = Vector3.Distance(transform.position, p.transform.position);
+            if (dist < minDistance)
+            {
+                minDistance = dist;
+                closest = p;
+            }
+        }
         return closest;
     }
 
-    public void Cook() { isMelted = true; UpdateVisual(); }
-    public bool IsReadyToCook() { return hasMilk && hasVanilla && !isMelted; }
-    public void Burn() { isBurnt = true; UpdateVisual(); }
-
-    // —â“€ŒÉ‚É“ü‚ê‚Ä‚à‚¢‚¢ó‘Ô‚©Hi¬‚´‚Á‚Ä‚¢‚ÄA‚Ü‚¾“€‚Á‚Ä‚¢‚È‚¢‚È‚çOKj
-    public bool IsReadyToFreeze()
+    public void Cook()
     {
-        return isMixed && !isFrozen;
+        isMelted = true; // —n‚¯‚½ƒtƒ‰ƒOON
+        Debug.Log("ƒ{ƒEƒ‹‚Ì’†g‚ª—n‚¯‚Ü‚µ‚½I");
+        UpdateVisual(); // Œ©‚½–ÚXV
     }
 
-    // “€‚ç‚¹‚éˆ—i—â“€ŒÉ‚©‚çŒÄ‚Î‚ê‚éj
-    public void Freeze()
+    public bool IsReadyToCook()
     {
-        isFrozen = true;
-        // ”O‚Ì‚½‚ß‘¼‚Ìƒtƒ‰ƒO‚Í®—‚µ‚Ä‚à‚¢‚¢‚Å‚·‚ªA‚Æ‚è‚ ‚¦‚¸‚»‚Ì‚Ü‚Ü‚Å
-        Debug.Log("ƒAƒCƒX‚ªŠ®¬‚µ‚Ü‚µ‚½I");
+        // ‹“û‚Æƒoƒjƒ‰‚Ì—¼•û‚ª“ü‚Á‚Ä‚¢‚ÄA‚Ü‚¾—n‚¯‚Ä‚È‚¯‚ê‚ÎOK
+        // («—ˆ“I‚É–¡‚ª‘‚¦‚½‚çA‚±‚±‚ğuŞ—¿ƒJƒEƒ“ƒg >= 2v‚È‚Ç‚É•Ï‚¦‚ê‚ÎOK)
+        return hasMilk && hasVanilla && !isMelted;
+    }
+
+    public void Burn()
+    {
+        isBurnt = true;
+        // isMelted = false; // Å‚°‚½‚çu—n‚¯‚½vˆµ‚¢‚Å‚Í‚È‚­u¸”svˆµ‚¢‚É‚·‚é‚È‚ç
+        Debug.Log("^‚Á•Å‚°‚¾II");
         UpdateVisual();
     }
+
+
 }

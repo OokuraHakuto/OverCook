@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1052815902627779793}
   - component: {fileID: 870294913566534589}
-  - component: {fileID: -4933398150532025961}
   m_Layer: 0
   m_Name: freezer
   m_TagString: Untagged
@@ -56,23 +55,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.25, y: 3.25, z: 3.25}
   m_Center: {x: -5.08, y: 1.6, z: 0}
---- !u!114 &-4933398150532025961
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 420957719775841899}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69c86250bf363c548bdff2b9d622035b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  holdPoint: {fileID: 0}
-  freezeTime: 5
-  doorObject: {fileID: 0}
-  currentTimer: 0
-  isFreezing: 0
 --- !u!1 &2517943935617096745
 GameObject:
   m_ObjectHideFlags: 0

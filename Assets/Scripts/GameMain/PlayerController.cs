@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Net;
 using UnityEngine;
 using UnityEngine.InputSystem;
 // 完成版（ビルド時）でのみInput Systemを読み込む
@@ -28,12 +26,6 @@ public class PlayerController : MonoBehaviour
     [Tooltip("0 = まっすぐ, 0.5 = 上下に広がる")]
     [Range(0f, 1f)]
     public float verticalAngle = 0.3f; // 上下の角度
-
-    [Header("アニメーション連動設定")]
-    public Transform idleAnchor; // 普段の親（IdleAnchor）
-    public Transform mixAnchor;  // 混ぜる時の親（MixAnchor）
-
-    private Coroutine mixMotionCoroutine; // 連打制御用
 
     private Rigidbody rb; // 物理演算を管理するRigidbodyコンポーネント
     private Vector2 moveInput; // 移動入力（X, Y）を保持する変数
@@ -272,28 +264,12 @@ public class PlayerController : MonoBehaviour
 
         heldItem = targetItem; // 持つアイテムを登録
 
-        // 親子関係の設定や位置のリセット
+        // 手の位置に移動＆親子関係を設定（これでプレイヤーについてくる）
         heldItem.transform.SetParent(handPosition);
+        heldItem.transform.localPosition = Vector3.zero;
+        heldItem.transform.localRotation = Quaternion.identity;
 
-        // Settingsを取得
-        ItemSettings settings = heldItem.GetComponent<ItemSettings>();
-        if (settings != null)
-        {
-            // サイズと位置の適用（既存）
-            heldItem.transform.localScale = settings.onPlayerScale;
-            heldItem.transform.localPosition = settings.holdPositionOffset;
-
-            // ★追加：回転の適用
-            // Quaternion.Euler で Vector3(x,y,z) を回転データに変換します
-            heldItem.transform.localRotation = Quaternion.Euler(settings.onPlayerRotation);
-        }
-        else
-        {
-            // 設定がない場合はデフォルト
-            heldItem.transform.localScale = Vector3.one;
-            heldItem.transform.localPosition = Vector3.zero;
-            heldItem.transform.localRotation = Quaternion.identity; // 回転なし
-        }
+        heldItem.transform.localScale = Vector3.one;
 
         // 物理演算と当たり判定を無効化（持っている間は暴れないように）
         Rigidbody itemRb = heldItem.GetComponent<Rigidbody>();
@@ -322,33 +298,6 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("IsHolding", false);
             anim.SetTrigger("Put");
         }
-    }
-
-    public void PlayMixAnimation()
-    {
-        // "Mix" という名前のトリガーをONにする
-        anim.SetTrigger("Mix");
-
-        if (mixMotionCoroutine != null) StopCoroutine(mixMotionCoroutine);
-        mixMotionCoroutine = StartCoroutine(MixMotionRoutine());
-    }
-
-    // 動きを制御するコルーチン
-    private IEnumerator MixMotionRoutine()
-    {
-        // --- 混ぜるモード開始 ---
-        // HandPositionの親を「腕」に変更
-        // worldPositionStays: false にすると、親の位置(0,0,0)にピタッと吸着します
-        handPosition.SetParent(mixAnchor, false);
-
-        // アニメーションの長さ分だけ待つ（0.5秒くらい？ 調整してください）
-        yield return new WaitForSeconds(0.5f);
-
-        // --- 混ぜるモード終了 ---
-        // 親を「いつもの場所」に戻す
-        handPosition.SetParent(idleAnchor, false);
-
-        mixMotionCoroutine = null;
     }
 
 }
