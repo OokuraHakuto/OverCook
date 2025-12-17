@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 7157195196594004758}
   - component: {fileID: 4485119032606169385}
   - component: {fileID: 2874837936764209967}
+  - component: {fileID: 9059751594861041405}
   m_Layer: 0
   m_Name: Item_Milk
   m_TagString: Untagged
@@ -167,3 +168,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.7, y: 11.2, z: 3.7}
   m_Center: {x: 0, y: 5.55, z: 0}
+--- !u!114 &9059751594861041405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7500929557964159404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc09a3f999fb3ea40a8749844e0e22ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onTableScale: {x: 0.3, y: 0.3, z: 0.3}
+  onPlayerScale: {x: 0.4, y: 0.4, z: 0.4}
+  holdPositionOffset: {x: 0, y: 0, z: 0}

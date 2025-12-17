@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bowl : MonoBehaviour, IInteracttable
+public class Bowl : MonoBehaviour, IInteracttable // ←スペル注意（元のままにしています）
 {
     [Header("中身の表示用")]
     public GameObject contentSphere;
@@ -13,10 +13,14 @@ public class Bowl : MonoBehaviour, IInteracttable
     public bool hasVanilla = false;
 
     // --- 調理の進行状況 ---
-    public bool isMelted = false; // レンチン完了
-    public bool isMixed = false;  // 混ぜ完了
-    public bool isFrozen = false; // 冷凍完了（完成）
-    public bool isBurnt = false;  // 焦げフラグ
+    public bool isMelted = false; // 溶けた
+    public bool isMixed = false;  // 混ざった
+    public bool isFrozen = false; // 凍った
+    public bool isBurnt = false;  // 焦げた
+
+    [Header("ミキサー設定")]
+    public int mixClicksNeeded = 5; // 完了までに必要なクリック数
+    private int currentMixClicks = 0;
 
     void Start()
     {
@@ -27,82 +31,36 @@ public class Bowl : MonoBehaviour, IInteracttable
         }
     }
 
-    // ▼▼▼ 追加：材料を受け入れる関数 ▼▼▼
-    public bool AddIngredient(string ingredient)
+    // 材料を入れる処理
+    public bool AddIngredient(GameObject item)
     {
-        // 既にレンチン済みなら、もう材料は足せない
         if (isMelted) return false;
 
+        // (Clone)の文字を消して名前判定
+        string itemName = item.name.Replace("(Clone)", "").Trim();
         bool success = false;
 
-        if (ingredient == "Milk" && !hasMilk)
-        {
-            hasMilk = true;
-            success = true;
-        }
-        else if (ingredient == "Vanilla" && !hasVanilla)
-        {
-            hasVanilla = true;
-            success = true;
-        }
+        if (itemName == "Item_Milk" && !hasMilk) { hasMilk = true; success = true; }
+        else if (itemName == "Item_Vanilla" && !hasVanilla) { hasVanilla = true; success = true; }
 
-        if (success)
-        {
-            UpdateVisual();
-        }
-        return success; // 「入れたよ」か「入れられなかったよ」を返す
+        if (success) UpdateVisual();
+        return success;
     }
 
-    // プレイヤーが手ぶらでインタラクトしたら、ボウルを持たせる
-    public void Interact()
+    // 混ぜる処理（外部から呼ばれる）
+    public void AddMixProgress()
     {
-        Debug.Log("BowlのInteractが呼ばれました"); // 動作確認用ログ
+        if (!IsReadyToMix()) return;
 
-        PlayerController player = FindClosestPlayer();
+        currentMixClicks++;
+        Debug.Log($"混ぜています... {currentMixClicks}/{mixClicksNeeded}");
 
-        if (player == null)
+        if (currentMixClicks >= mixClicksNeeded)
         {
-            Debug.LogError("プレイヤーが見つかりません（距離が遠い？）");
-            return;
-        }
-
-        // ---------------------------------------------------------
-        // パターンA：プレイヤーが「何か」を持っている場合 → ボウルに入れる
-        // ---------------------------------------------------------
-        if (player.heldItem != null)
-        {
-            // プレイヤーからアイテムを受け取って（消して）、名前を取得
-            string itemName = player.GiveItem();
-            Debug.Log("投入されたアイテム名: " + itemName);
-
-            if (itemName == "Item_Milk") // ※プレファブ名と完全一致させる！
-            {
-                hasMilk = true;
-                Debug.Log("ボウルに牛乳が入りました！");
-                UpdateVisual();
-            }
-            else if (itemName == "Item_Vanilla") // ※プレファブ名と完全一致させる！
-            {
-                hasVanilla = true;
-                Debug.Log("ボウルにバニラが入りました！");
-                UpdateVisual();
-            }
-            else
-            {
-                Debug.LogWarning("そのアイテム (" + itemName + ") はボウルに入れられません");
-            }
-        }
-        // ---------------------------------------------------------
-        // パターンB：プレイヤーが「手ぶら」の場合 → ボウルを拾う
-        // ---------------------------------------------------------
-        else
-        {
-            player.PickUpItem(this.gameObject);
-            Debug.Log("ボウルを拾いました！");
+            MixComplete();
         }
     }
 
-    // 混ぜ完了時に呼ばれる関数
     public void MixComplete()
     {
         isMixed = true;
@@ -110,100 +68,79 @@ public class Bowl : MonoBehaviour, IInteracttable
         UpdateVisual();
     }
 
-    // 混ぜる工程に進んでいいかどうか
     public bool IsReadyToMix()
     {
-        // 溶けていて(isMelted)、まだ混ぜていない(isMixedがfalse)ならOK
         return isMelted && !isMixed;
     }
 
-    // 見た目の更新
+    // 見た目更新
     public void UpdateVisual()
     {
         if (contentSphere == null) return;
 
         if (!hasMilk && !hasVanilla)
         {
-            contentSphere.SetActive(false); // 空っぽ
+            contentSphere.SetActive(false);
             return;
         }
-
         contentSphere.SetActive(true);
 
-        // 優先順位： 焦げ > 冷凍(完成) > 混ぜ(New!) > 溶け > 材料
-        if (isBurnt)
+        if (isBurnt) sphereRenderer.material.color = Color.black;
+        else if (isFrozen) sphereRenderer.material.color = new Color(0.5f, 0.8f, 1.0f);
+        else if (isMixed) sphereRenderer.material.color = new Color(1.0f, 0.95f, 0.8f);
+        else if (isMelted) sphereRenderer.material.color = new Color(1.0f, 0.8f, 0.6f);
+        else if (hasMilk && hasVanilla) sphereRenderer.material.color = new Color(1.0f, 0.9f, 0.7f);
+        else if (hasMilk) sphereRenderer.material.color = Color.white;
+        else if (hasVanilla) sphereRenderer.material.color = new Color(1.0f, 0.8f, 0.2f);
+    }
+
+    // インタラクト（直接触った場合）
+    public void Interact()
+    {
+        PlayerController player = FindClosestPlayer();
+        if (player == null) return;
+
+        if (player.heldItem != null)
         {
-            sphereRenderer.material.color = Color.black;
+            if (AddIngredient(player.heldItem))
+            {
+                GameObject item = player.heldItem;
+                player.ReleaseItem();
+                Destroy(item);
+            }
         }
-        else if (isFrozen) // ※冷凍はまだ作ってませんが場所だけ
+        else
         {
-            sphereRenderer.material.color = new Color(0.5f, 0.8f, 1.0f); // アイスっぽい色
-        }
-        else if (isMixed)
-        {
-            // 混ぜると少し白っぽく、ふんわりした色になるイメージ
-            sphereRenderer.material.color = new Color(1.0f, 0.95f, 0.8f);
-        }
-        else if (isMelted)
-        {
-            // 溶けた色（例：茶色っぽくする、または濃いクリーム色）
-            sphereRenderer.material.color = new Color(1.0f, 0.8f, 0.6f);
-        }
-        else if (hasMilk && hasVanilla)
-        {
-            // 準備OKの色（白）
-            sphereRenderer.material.color = new Color(1.0f, 0.9f, 0.7f);
-        }
-        else if (hasMilk)
-        {
-            sphereRenderer.material.color = Color.white;
-        }
-        else if (hasVanilla)
-        {
-            sphereRenderer.material.color = new Color(1.0f, 0.8f, 0.2f);
+            player.PickUpItem(this.gameObject);
         }
     }
 
-    // (FindClosestPlayerは省略...)
-    private PlayerController FindClosestPlayer() 
+    // プレイヤー探索
+    private PlayerController FindClosestPlayer()
     {
         PlayerController[] players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
         PlayerController closest = null;
         float minDistance = 6.0f;
-
-        foreach (var p in players)
-        {
-            float dist = Vector3.Distance(transform.position, p.transform.position);
-            if (dist < minDistance)
-            {
-                minDistance = dist;
-                closest = p;
-            }
-        }
+        foreach (var p in players) { float dist = Vector3.Distance(transform.position, p.transform.position); if (dist < minDistance) { minDistance = dist; closest = p; } }
         return closest;
     }
 
-    public void Cook()
+    public void Cook() { isMelted = true; UpdateVisual(); }
+    public bool IsReadyToCook() { return hasMilk && hasVanilla && !isMelted; }
+    public void Burn() { isBurnt = true; UpdateVisual(); }
+
+    // 冷凍庫に入れてもいい状態か？（混ざっていて、まだ凍っていないならOK）
+    public bool IsReadyToFreeze()
     {
-        isMelted = true; // 溶けたフラグON
-        Debug.Log("ボウルの中身が溶けました！");
-        UpdateVisual(); // 見た目更新
+        return isMixed && !isFrozen;
     }
 
-    public bool IsReadyToCook()
+    // 凍らせる処理（冷凍庫から呼ばれる）
+    public void Freeze()
     {
-        // 牛乳とバニラの両方が入っていて、まだ溶けてなければOK
-        // (将来的に味が増えたら、ここを「材料カウント >= 2」などに変えればOK)
-        return hasMilk && hasVanilla && !isMelted;
-    }
-
-    public void Burn()
-    {
-        isBurnt = true;
-        // isMelted = false; // 焦げたら「溶けた」扱いではなく「失敗」扱いにするなら
-        Debug.Log("真っ黒焦げだ！！");
+        isFrozen = true;
+        // 念のため他のフラグは整理してもいいですが、とりあえずそのままで
+        Debug.Log("アイスが完成しました！");
         UpdateVisual();
     }
-
-
 }
