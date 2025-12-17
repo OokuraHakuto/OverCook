@@ -1,25 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Counter : MonoBehaviour, IInteracttable
 {
     [Header("設定")]
-    public Transform holdPoint; // アイテムを置く位置
-
-    private GameObject heldItem; // 今乗っているアイテム（ボウルに限らず何でも）
-
+    public Transform holdPoint;
+    private GameObject heldItem;
     [Header("制限設定")]
-    [Tooltip("チェックを外すと、プレイヤーはこの台にアイテムを置けなくなります（拾う専用になる）")]
-    public bool canPlaceItem = true; // デフォルトは「置ける」
+    public bool canPlaceItem = true;
 
-    // ゲーム開始時、最初から乗っているアイテムを認識
     void Start()
     {
         if (holdPoint.childCount > 0)
         {
             heldItem = holdPoint.GetChild(0).gameObject;
-            // 最初からあるアイテムのコライダーはオフにしておく（机がクリックしやすいように）
             Collider[] cols = heldItem.GetComponentsInChildren<Collider>();
             foreach (Collider c in cols) c.enabled = false;
         }
@@ -27,64 +23,103 @@ public class Counter : MonoBehaviour, IInteracttable
 
     public void Interact()
     {
-        // プレイヤーを探す
         PlayerController player = FindClosestPlayer();
         if (player == null) return;
 
-        // =========================================================
-        // パターンA：台に何か置いてある場合 → プレイヤーが取る
-        // =========================================================
+        // パターンA：台に何かある
         if (heldItem != null)
         {
-            // プレイヤーが手ぶらなら
+            // --- ケース1：手ぶら（拾う） ---
             if (player.heldItem == null)
             {
-                // コライダーを復活させてから渡す
                 Collider[] cols = heldItem.GetComponentsInChildren<Collider>();
                 foreach (Collider c in cols) c.enabled = true;
 
-                player.PickUpItem(heldItem);
-                heldItem = null; // 台は空になる
+                GameObject itemToPass = heldItem;
+                player.PickUpItem(itemToPass);
+
+                // スケールを手持ち用に
+                ItemSettings settings = itemToPass.GetComponent<ItemSettings>();
+                if (settings != null)
+                {
+                    itemToPass.transform.localScale = settings.onPlayerScale;
+                    itemToPass.transform.localPosition = settings.holdPositionOffset;
+                }
+                else
+                {
+                    itemToPass.transform.localScale = Vector3.one;
+                }
+
+                heldItem = null;
                 Debug.Log("台からアイテムを取りました");
             }
+            // --- ケース2：何か持っている（合体・投入・混ぜる） ---
             else
             {
-                Debug.Log("手がふさがっています！");
-                // ※将来的に、ここで「皿と食材を合体させる」処理などを追加できます
+                Bowl bowl = heldItem.GetComponent<Bowl>();
+                Whisk whisk = player.heldItem.GetComponent<Whisk>();
+
+                // ★泡だて器で混ぜる
+                if (whisk != null && bowl != null)
+                {
+                    if (bowl.IsReadyToMix())
+                    {
+                        bowl.AddMixProgress();
+
+                        player.PlayMixAnimation();
+                    }
+                    else
+                    {
+                        Debug.Log(bowl.isMixed ? "もう混ざっています" : "まだ溶けていません");
+                    }
+                }
+                // ★食材を入れる
+                else if (bowl != null)
+                {
+                    bool success = bowl.AddIngredient(player.heldItem);
+                    if (success)
+                    {
+                        GameObject ingredient = player.heldItem;
+                        player.ReleaseItem();
+                        Destroy(ingredient);
+                        Debug.Log("ボウルに入れました");
+                    }
+                }
+                else
+                {
+                    Debug.Log("手がふさがっています");
+                }
             }
         }
-        // =========================================================
-        // パターンB：台が空の場合 → プレイヤーが置く
-        // =========================================================
+        // パターンB：台が空（置く）
         else
         {
-            // プレイヤーが何か持っているなら
+            if (!canPlaceItem) return;
+
             if (player.heldItem != null)
             {
-                // 手放させる（参照を切る）
                 GameObject itemToPlace = player.heldItem;
                 player.ReleaseItem();
 
-                // 台の上に移動
                 itemToPlace.transform.SetParent(holdPoint);
                 itemToPlace.transform.localPosition = Vector3.zero;
                 itemToPlace.transform.localRotation = Quaternion.identity;
 
-                // スケールを元に戻す（念のため）
-                itemToPlace.transform.localScale = Vector3.one;
+                // スケールを机用に
+                ItemSettings settings = itemToPlace.GetComponent<ItemSettings>();
+                if (settings != null) itemToPlace.transform.localScale = settings.onTableScale;
+                else itemToPlace.transform.localScale = Vector3.one;
 
-                // ★重要：置いてある間もインタラクトできるようにコライダーを復活させる
                 Collider[] cols = itemToPlace.GetComponentsInChildren<Collider>();
                 foreach (Collider c in cols) c.enabled = true;
 
-                // 台が記憶する
                 heldItem = itemToPlace;
                 Debug.Log("台に置きました");
             }
         }
     }
 
-    // プレイヤー探索
+    // プレイヤー探索（共通）
     private PlayerController FindClosestPlayer()
     {
         PlayerController[] players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);

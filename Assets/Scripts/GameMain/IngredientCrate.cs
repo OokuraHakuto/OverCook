@@ -23,12 +23,14 @@ public class IngredientCrate : MonoBehaviour, IInteracttable
 
             if (heldBowl != null)
             {
-                // ★持っているのが「ボウル」だった場合
-                // → ボウルの中に材料を入れる
-                bool added = heldBowl.AddIngredient(ingredientName);
+                if (heldBowl != null)
+                {
+                    // ★ここが大事：itemPrefabを直接渡す形
+                    bool added = heldBowl.AddIngredient(itemPrefab);
 
-                if (added) Debug.Log("ボウルに " + ingredientName + " を入れました！");
-                else Debug.Log("そのボウルには入りません");
+                    if (added) Debug.Log("ボウルに入れました！");
+                    else Debug.Log("入りません");
+                }
             }
             else
             {
