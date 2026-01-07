@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -981889746334711068}
   - component: {fileID: 1019709511261932917}
   - component: {fileID: 9041719550321978468}
+  - component: {fileID: -8649050638289897983}
   m_Layer: 0
   m_Name: cup_Vanilla
   m_TagString: Untagged
@@ -100,6 +101,20 @@ MonoBehaviour:
   onPlayerScale: {x: 0.5, y: 0.5, z: 0.5}
   holdPositionOffset: {x: 0, y: 0, z: 0}
   onPlayerRotation: {x: 0, y: 0, z: 0}
+--- !u!114 &-8649050638289897983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7126815739307819046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 312eb7f09f8b57c479ab87949abeaab5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isFull: 1
+  flavor: Vanilla
 --- !u!1001 &5418210147647298862
 PrefabInstance:
   m_ObjectHideFlags: 0

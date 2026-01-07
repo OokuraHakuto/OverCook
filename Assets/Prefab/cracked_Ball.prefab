@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2351593191065313176}
@@ -95,8 +95,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 951e6012bbef07a42be20bb907d9888e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onTableScale: {x: 0.75, y: 0.75, z: 0.75}
-  onPlayerScale: {x: 0.75, y: 0.75, z: 0.75}
+  onTableScale: {x: 1, y: 1, z: 1}
+  onPlayerScale: {x: 1, y: 1, z: 1}
   holdPositionOffset: {x: 0, y: 0, z: 0}
   onPlayerRotation: {x: 0, y: 0, z: 0}
 --- !u!1001 &2821558979116775539

@@ -18,9 +18,15 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
     public bool isFrozen = false; // “€‚Á‚½
     public bool isBurnt = false;  // Å‚°‚½
 
+    public bool isCracked = false;// ‚Ğ‚ÑŠ„‚êƒtƒ‰ƒO
+
     [Header("ƒ~ƒLƒT[İ’è")]
-    public int mixClicksNeeded = 5; // Š®—¹‚Ü‚Å‚É•K—v‚ÈƒNƒŠƒbƒN”
+    public int mixClicksNeeded = 10; // Š®—¹‚Ü‚Å‚É•K—v‚ÈƒNƒŠƒbƒN”
     private int currentMixClicks = 0;
+
+    [Header("Œ©‚½–Ú‚ÌØ‚è‘Ö‚¦")]
+    public GameObject normalModel;   // •’Ê‚Ìƒ{ƒEƒ‹‚Ìƒ‚ƒfƒ‹iqƒIƒuƒWƒFƒNƒgj
+    public GameObject crackedModel;  // ‚Ğ‚ÑŠ„‚êƒ{ƒEƒ‹‚Ìƒ‚ƒfƒ‹iqƒIƒuƒWƒFƒNƒgj
 
     void Start()
     {
@@ -142,5 +148,31 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
         // ”O‚Ì‚½‚ß‘¼‚Ìƒtƒ‰ƒO‚Í®—‚µ‚Ä‚à‚¢‚¢‚Å‚·‚ªA‚Æ‚è‚ ‚¦‚¸‚»‚Ì‚Ü‚Ü‚Å
         Debug.Log("ƒAƒCƒX‚ªŠ®¬‚µ‚Ü‚µ‚½I");
         UpdateVisual();
+    }
+
+    // ƒJƒbƒv‚©‚çŒÄ‚Î‚ê‚éu·‚è•t‚¯ˆ—v
+    // ¬Œ÷‚µ‚½‚ç true ‚ğ•Ô‚·
+    public bool TryScoopIceCream()
+    {
+        // ‚Ü‚¾“€‚Á‚Ä‚¢‚È‚¢A‚Ü‚½‚ÍŠù‚ÉŠ„‚ê‚Ä‚¢‚½‚çu¸”sv
+        if (!isFrozen || isCracked)
+        {
+            return false;
+        }
+
+        // ¬Œ÷I‚Ğ‚ÑŠ„‚êó‘Ô‚É‚·‚é
+        BecomeCracked();
+        return true;
+    }
+
+    // ‚Ğ‚ÑŠ„‚ê‚½ó‘Ô‚É‚·‚éˆ—
+    private void BecomeCracked()
+    {
+        isCracked = true;
+
+        if (normalModel != null) normalModel.SetActive(false); // •’Ê‚Ì‚ğÁ‚·
+        if (crackedModel != null) crackedModel.SetActive(true); // Š„‚ê‚½‚Ì‚ğo‚·
+
+        Debug.Log("ƒ{ƒEƒ‹‚©‚çƒAƒCƒX‚ğæ‚è‚Ü‚µ‚½Iƒ{ƒEƒ‹‚Í‚Ğ‚ÑŠ„‚ê‚Ü‚µ‚½B");
     }
 }

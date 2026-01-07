@@ -118,3 +118,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 0}
+  canPlaceItem: 1
+  fullIcePrefab: {fileID: 7126815739307819046, guid: 091b9bb9a5a0cc54c99e93ac8f75a3f4, type: 3}

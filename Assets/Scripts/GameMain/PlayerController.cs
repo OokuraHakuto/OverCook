@@ -121,6 +121,13 @@ public class PlayerController : MonoBehaviour
     // 物理演算のタイミングで一定間隔で呼ばれる
     void FixedUpdate()
     {
+        if (GameManager.Instance != null && !GameManager.Instance.isPlaying)
+        {
+            rb.velocity = Vector3.zero; // 滑らないようにピタッと止める
+            if (anim != null) anim.SetFloat("Speed", 0f); // 走りモーションも止める
+            return; // ここで処理終了（下の移動処理には行かせない）
+        }
+
         // 2Dの入力を3D空間の移動ベクトルに変換する
         Vector3 movement = new Vector3(moveInput.x, 0f, moveInput.y);
 
@@ -144,6 +151,8 @@ public class PlayerController : MonoBehaviour
     // 「インタラクトする」という実際の行動（両方のモードから呼ばれる）
     private void DoInteract()
     {
+        if (GameManager.Instance != null && !GameManager.Instance.isPlaying) return;
+
         // 1. 発射地点（胸の高さ）
         Vector3 rayOrigin = transform.position + Vector3.up * 1f;
 

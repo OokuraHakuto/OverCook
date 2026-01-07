@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3874525547696151816}
   - component: {fileID: 8530036478930418394}
   - component: {fileID: -1697410037503784286}
+  - component: {fileID: 3185987314235399861}
   m_Layer: 0
   m_Name: cup_Chocolate
   m_TagString: Untagged
@@ -100,6 +101,20 @@ MonoBehaviour:
   onPlayerScale: {x: 0.5, y: 0.5, z: 0.5}
   holdPositionOffset: {x: 0, y: 0, z: 0}
   onPlayerRotation: {x: 0, y: 0, z: 0}
+--- !u!114 &3185987314235399861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8768650284142359692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 312eb7f09f8b57c479ab87949abeaab5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isFull: 1
+  flavor: Vanilla
 --- !u!1001 &4022777784197232182
 PrefabInstance:
   m_ObjectHideFlags: 0

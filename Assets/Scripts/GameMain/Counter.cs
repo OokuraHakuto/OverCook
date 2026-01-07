@@ -11,6 +11,9 @@ public class Counter : MonoBehaviour, IInteracttable
     [Header("制限設定")]
     public bool canPlaceItem = true;
 
+    [Header("完成したアイスのプレファブ")]
+    public GameObject fullIcePrefab;
+
     void Start()
     {
         if (holdPoint.childCount > 0)
@@ -57,10 +60,42 @@ public class Counter : MonoBehaviour, IInteracttable
             else
             {
                 Bowl bowl = heldItem.GetComponent<Bowl>();
+                Cup playerCup = player.heldItem.GetComponent<Cup>(); 
                 Whisk whisk = player.heldItem.GetComponent<Whisk>();
 
-                // ★泡だて器で混ぜる
-                if (whisk != null && bowl != null)
+                // 盛り付け（Plating）処理
+                // 「机にボウル」があり、「プレイヤーがカップ」を持っている場合
+                if (bowl != null && playerCup != null)
+                {
+                    // カップが空っぽ(false)で、ボウルからすくい取れたら
+                    if (!playerCup.isFull && bowl.TryScoopIceCream())
+                    {
+                        // 1. プレイヤーの手にある「空カップ」を消す
+                        GameObject emptyCup = player.heldItem;
+                        player.ReleaseItem();
+                        Destroy(emptyCup);
+
+                        // 2. 「完成アイス」を生成して持たせる
+                        if (fullIcePrefab != null)
+                        {
+                            GameObject newIce = Instantiate(fullIcePrefab);
+                            player.PickUpItem(newIce);
+
+                            // サイズや位置の調整（ItemSettingsがあれば自動でやってくれますが念のため）
+                            ItemSettings settings = newIce.GetComponent<ItemSettings>();
+                            if (settings != null)
+                            {
+                                newIce.transform.localScale = settings.onPlayerScale;
+                                newIce.transform.localPosition = settings.holdPositionOffset;
+                                newIce.transform.localRotation = Quaternion.Euler(settings.onPlayerRotation);
+                            }
+                        }
+
+                        Debug.Log("盛り付け完了！");
+                        return; // ここで処理終了
+                    }
+                }
+                else if (whisk != null && bowl != null)                // 泡だて器で混ぜる
                 {
                     if (bowl.IsReadyToMix())
                     {
@@ -73,7 +108,7 @@ public class Counter : MonoBehaviour, IInteracttable
                         Debug.Log(bowl.isMixed ? "もう混ざっています" : "まだ溶けていません");
                     }
                 }
-                // ★食材を入れる
+                // 食材を入れる
                 else if (bowl != null)
                 {
                     bool success = bowl.AddIngredient(player.heldItem);
@@ -111,7 +146,7 @@ public class Counter : MonoBehaviour, IInteracttable
                 else itemToPlace.transform.localScale = Vector3.one;
 
                 Collider[] cols = itemToPlace.GetComponentsInChildren<Collider>();
-                foreach (Collider c in cols) c.enabled = true;
+                foreach (Collider c in cols) c.enabled = false;
 
                 heldItem = itemToPlace;
                 Debug.Log("台に置きました");

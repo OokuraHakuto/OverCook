@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -9094127415056804574}
   - component: {fileID: 1414743097801419092}
   - component: {fileID: 8281093379971432219}
+  - component: {fileID: -3725603293232523258}
   m_Layer: 0
   m_Name: cup_matcha
   m_TagString: Untagged
@@ -100,6 +101,20 @@ MonoBehaviour:
   onPlayerScale: {x: 0.5, y: 0.5, z: 0.5}
   holdPositionOffset: {x: 0, y: 0, z: 0}
   onPlayerRotation: {x: 0, y: 0, z: 0}
+--- !u!114 &-3725603293232523258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4640946579425866607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 312eb7f09f8b57c479ab87949abeaab5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isFull: 1
+  flavor: Vanilla
 --- !u!1001 &1110703294124798307
 PrefabInstance:
   m_ObjectHideFlags: 0
