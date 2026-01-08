@@ -324,6 +324,16 @@ public class PlayerController : MonoBehaviour
 
     public void ReleaseItem()
     {
+        if (heldItem != null)
+        {
+            Bowl bowl = heldItem.GetComponent<Bowl>();
+            if (bowl != null)
+            {
+                // 先ほどBowlスクリプトに追加した（はずの）関数を呼ぶ
+                bowl.OnReleased();
+            }
+        }
+
         heldItem = null; // 参照を切るだけ（オブジェクトは消さない）
 
         if (anim != null)

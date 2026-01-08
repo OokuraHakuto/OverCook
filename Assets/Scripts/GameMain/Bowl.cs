@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚Ä‚¢‚Ü‚·j
 {
@@ -19,6 +20,7 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
     public bool isBurnt = false;  // Å‚°‚½
 
     public bool isCracked = false;// ‚Ğ‚ÑŠ„‚êƒtƒ‰ƒO
+    private bool isHeld = false;  // ‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
 
     [Header("ƒ~ƒLƒT[İ’è")]
     public int mixClicksNeeded = 10; // Š®—¹‚Ü‚Å‚É•K—v‚ÈƒNƒŠƒbƒN”
@@ -28,6 +30,19 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
     public GameObject normalModel;   // •’Ê‚Ìƒ{ƒEƒ‹‚Ìƒ‚ƒfƒ‹iqƒIƒuƒWƒFƒNƒgj
     public GameObject crackedModel;  // ‚Ğ‚ÑŠ„‚êƒ{ƒEƒ‹‚Ìƒ‚ƒfƒ‹iqƒIƒuƒWƒFƒNƒgj
 
+    [Header("UIİ’èiƒQ[ƒWj")]
+    public GameObject gaugeObject; // Gauge2ƒvƒŒƒnƒu©‘Ì
+    public Slider gaugeSlider;     // ‚»‚Ì’†‚ÌSlider
+    public Image gaugeFillImage;
+
+    [Header("’²—ŠÔİ’è")]
+    public float freezeTimeNeeded = 5.0f;
+    private float currentFreezeTimer = 0f;
+
+    public float cookTimeNeeded = 5.0f; // Š®¬‚Ü‚Å
+    public float burnTimeNeeded = 8.0f; // Å‚°‚é‚Ü‚Å
+    private float currentCookTimer = 0f;
+
     void Start()
     {
         if (contentSphere != null)
@@ -35,12 +50,14 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
             sphereRenderer = contentSphere.GetComponent<Renderer>();
             UpdateVisual();
         }
+
+        if (gaugeObject != null) gaugeObject.SetActive(false);
     }
 
     // Ş—¿‚ğ“ü‚ê‚éˆ—
     public bool AddIngredient(GameObject item)
     {
-        if (isMelted) return false;
+        if (isBurnt || isMelted) return false;
 
         // (Clone)‚Ì•¶š‚ğÁ‚µ‚Ä–¼‘O”»’è
         string itemName = item.name.Replace("(Clone)", "").Trim();
@@ -56,14 +73,19 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
     // ¬‚º‚éˆ—iŠO•”‚©‚çŒÄ‚Î‚ê‚éj
     public void AddMixProgress()
     {
+        if (isBurnt) return;
         if (!IsReadyToMix()) return;
 
         currentMixClicks++;
-        Debug.Log($"¬‚º‚Ä‚¢‚Ü‚·... {currentMixClicks}/{mixClicksNeeded}");
+
+        // ¬‚º‚é‚Íu—ÎFv
+        SetGaugeColor(Color.green);
+        UpdateGauge((float)currentMixClicks / mixClicksNeeded);
 
         if (currentMixClicks >= mixClicksNeeded)
         {
             MixComplete();
+            HideGauge();
         }
     }
 
@@ -77,6 +99,175 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
     public bool IsReadyToMix()
     {
         return isMelted && !isMixed;
+    }
+
+    //“€‚ç‚¹‚é
+    public void AddFreezeProgress(float deltaTime)
+    {
+        // ¬‚´‚Á‚Ä‚È‚¢A‚Ü‚½‚ÍŠù‚É“€‚Á‚Ä‚½‚ç–³‹
+        if (isBurnt) return;
+        if (!isMixed || isFrozen) return;
+
+        currentFreezeTimer += deltaTime;
+
+        // ƒQ[ƒWXV
+        SetGaugeColor(Color.cyan);
+        UpdateGauge(currentFreezeTimer / freezeTimeNeeded);
+
+        if (currentFreezeTimer >= freezeTimeNeeded)
+        {
+            Freeze();
+            HideGauge(); // I‚í‚Á‚½‚ç‰B‚·
+        }
+    }
+
+    //‰·‚ß‚é
+    public void AddCookProgress(float deltaTime)
+    {
+        // Å‚°‚Ä‚½‚ç‚à‚¤‰½‚à‚µ‚È‚¢
+        if (isBurnt) return;
+        // Ş—¿‚ª‚È‚¢‚È‚ç‰½‚à‚µ‚È‚¢
+        if (!hasMilk || !hasVanilla) return;
+
+        currentCookTimer += deltaTime;
+
+        // --- ƒtƒF[ƒY1: ’²—’†i0% ¨ 100%j ---
+        if (!isMelted)
+        {
+            // ’²—’†‚ÍuƒIƒŒƒ“ƒWv
+            SetGaugeColor(new Color(0.0f, 1.0f, 0.0f));
+
+            // ƒQ[ƒW‚ğ•’Ê‚É‘‚â‚·
+            UpdateGauge(currentCookTimer / cookTimeNeeded);
+
+            if (currentCookTimer >= cookTimeNeeded)
+            {
+                Cook(); // Š®¬I
+            }
+        }
+        // --- ƒtƒF[ƒY2: Å‚°is’†i‚¸‚Á‚Æ100%‚Ì‚Ü‚ÜAF‚¾‚¯•Ï‚í‚éj ---
+        else
+        {
+            // Å‚°‚Ìis“xi0.0 ` 1.0j
+            float burnProgress = (currentCookTimer - cookTimeNeeded) / burnTimeNeeded;
+
+            // š‚±‚±‚ª•ÏX“_I
+            // ƒQ[ƒW‚Ì—Ê‚Íu1.0i–ƒ^ƒ“jv‚ÅŒÅ’èI2–{–Ú‚Ío‚µ‚Ü‚¹‚ñB
+            UpdateGauge(1.0f);
+
+            // ‚»‚Ì‘ã‚í‚èAF‚ğu—Î(ˆÀ‘S) ¨ Ô(ŠëŒ¯)v‚Ö™X‚É•Ï‰»‚³‚¹‚é
+            // Color.Lerp ‚Æ‚¢‚¤‹@”\‚ÅAis“x‚É‡‚í‚¹‚ÄF‚ğ¬‚º‚Ü‚·
+            SetGaugeColor(Color.Lerp(Color.green, Color.red, burnProgress));
+
+            // —P—\ŠÔ‚ğ’´‚¦‚½‚çÅ‚°‚é
+            if (currentCookTimer >= (cookTimeNeeded + burnTimeNeeded))
+            {
+                Burn();
+                HideGauge();
+            }
+        }
+    }
+
+    //ƒŒƒ“ƒW‚É“ü‚ê‚é—piŒ©‚½–Ú‚ğÁ‚µ‚ÄAƒQ[ƒWXV‚Í‹–‰Âj
+    public void OnPutInMicrowave()
+    {
+        isHeld = false; // ƒŒƒ“ƒW‚Ì’†‚È‚Ì‚Åuè‚¿v‚Å‚Í‚È‚¢
+
+        // ƒ‚ƒfƒ‹iŒ©‚½–Új‚ğ‘S•”Á‚·
+        ToggleModelVisibility(false);
+    }
+
+    // ƒvƒŒƒCƒ„[‚ªE‚Á‚½—piŒ©‚½–Ú‚ğ–ß‚µ‚ÄAƒQ[ƒW‚ÍÁ‚·j
+    public void OnPickedUp()
+    {
+        isHeld = true; // ‚±‚±‚ÅŠmÀ‚Éu‚Á‚Ä‚év‚±‚Æ‚É‚·‚éI
+
+        // ƒ‚ƒfƒ‹iŒ©‚½–Új‚ğ•œŠˆ‚³‚¹‚é
+        ToggleModelVisibility(true);
+
+        // ƒQ[ƒW‚Í‘¦Á‚·
+        HideGauge();
+    }
+
+    // Œ©‚½–Ú‚ÌON/OFF‚ğØ‚è‘Ö‚¦‚é•Ö—˜ŠÖ”
+    private void ToggleModelVisibility(bool isVisible)
+    {
+        // 1. ’†gi‰t‘Ì‚È‚Çj
+        if (contentSphere != null)
+        {
+            // ’†g‚ª“ü‚Á‚Ä‚¢‚é‚¾‚¯•\¦§Œä‚É]‚¤
+            // iŞ—¿‚ª“ü‚Á‚Ä‚È‚¢‚Ì‚É isVisible=true ‚¾‚©‚ç‚Æ‚¢‚Á‚Ä•\¦‚³‚¹‚È‚¢‚æ‚¤‚É‚·‚éj
+            if (isVisible) UpdateVisual();
+            else contentSphere.SetActive(false);
+        }
+
+        // 2. ƒ{ƒEƒ‹‚ÌŠí
+        if (normalModel != null && !isCracked) normalModel.SetActive(isVisible);
+        if (crackedModel != null && isCracked) crackedModel.SetActive(isVisible);
+
+        // ‚à‚µƒ{ƒEƒ‹‚ÌŠí©‘Ì‚É MeshRenderer ‚ª‚Â‚¢‚Ä‚¢‚éê‡
+        Renderer r = GetComponent<Renderer>();
+        if (r != null) r.enabled = isVisible;
+    }
+
+    //‚Á‚½‚Æ‚«‚ÌƒQ[ƒW‚ğŠÇ—‚·‚é
+    public void RefreshGaugeOnPickup()
+    {
+        HideGauge(); // Šî–{‚ÍÁ‚·
+
+        // Å‚°‚Ä‚½‚ç‰½‚à‚µ‚È‚¢
+        if (isBurnt) return;
+    }
+
+    //ƒQ[ƒW‚Ì•\¦EXV
+    private void UpdateGauge(float percent)
+    {
+        if (isHeld)
+        {
+            if (gaugeObject != null && gaugeObject.activeSelf)
+            {
+                gaugeObject.SetActive(false);
+            }
+            return;
+        }
+
+        if (gaugeObject != null)
+        {
+            // ”ñ•\¦‚È‚ç•\¦‚·‚é
+            if (!gaugeObject.activeSelf) gaugeObject.SetActive(true);
+
+            // ƒJƒƒ‰‚Ì•û‚ğŒü‚­iƒrƒ‹ƒ{[ƒhˆ—j
+            if (Camera.main != null)
+            {
+                gaugeObject.transform.rotation = Camera.main.transform.rotation;
+            }
+        }
+
+        if (gaugeSlider != null)
+        {
+            gaugeSlider.value = percent; // 0.0 ` 1.0
+        }
+    }
+
+    //ƒQ[ƒW‚ÌF‚ğ•Ï‚¦‚é
+    private void SetGaugeColor(Color color)
+    {
+        if (gaugeFillImage != null)
+        {
+            gaugeFillImage.color = color;
+        }
+    }
+
+    //ƒQ[ƒW‚ğ‰B‚µ‚Äƒ^ƒCƒ}[‚ğƒŠƒZƒbƒg
+    private void HideGauge()
+    {
+        if (gaugeObject != null) gaugeObject.SetActive(false);
+    }
+
+    //ƒvƒŒƒCƒ„[‚ª’u‚­êŠ‚©‚çŒÄ‚Ô—p
+    public void OnReleased()
+    {
+        isHeld = false;
     }
 
     // Œ©‚½–ÚXV
@@ -118,6 +309,10 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
         else
         {
             player.PickUpItem(this.gameObject);
+
+            isHeld = true;
+
+            RefreshGaugeOnPickup();
         }
     }
 

@@ -8,34 +8,18 @@ public class Freezer : MonoBehaviour, IInteracttable
 {
     [Header("設定")]
     public Transform holdPoint;       // ボウルを置く場所
-    public float freezeTime = 3.0f;   // 完成までの時間
-    public GameObject doorObject;     // ドア（アニメーション用・今回は省略可）
 
-    // 将来のUIゲージ用に public にしておきます
-    [Header("状態確認（UI用）")]
-    public float currentTimer = 0f;
-    public bool isFreezing = false;
-
+    // 内部変数
     private GameObject heldItem;
-    private Bowl heldBowl; // 処理中のボウル
+    private Bowl heldBowl; // 中に入っているボウル
 
     void Update()
     {
-        // 冷凍処理
-        if (isFreezing && heldBowl != null)
+        // ボウルが入っているなら、ボウル自身の「冷凍進行処理」を呼び出す
+        if (heldBowl != null)
         {
-            currentTimer += Time.deltaTime;
-
-            // 完了判定
-            if (currentTimer >= freezeTime)
-            {
-                currentTimer = freezeTime;
-                isFreezing = false;
-
-                // ボウルを完成状態にする
-                heldBowl.Freeze();
-                Debug.Log("冷凍完了！");
-            }
+            // Time.deltaTime（1フレームの時間）を渡して、ボウル側で計算してもらう
+            heldBowl.AddFreezeProgress(Time.deltaTime);
         }
     }
 
@@ -44,24 +28,15 @@ public class Freezer : MonoBehaviour, IInteracttable
         PlayerController player = FindClosestPlayer();
         if (player == null) return;
 
-        // パターンA：冷凍庫にボウルがある（取り出す）
+        // --- パターンA：中に物がある（取り出す） ---
         if (heldItem != null)
         {
             if (player.heldItem == null)
             {
-                // まだ冷凍中なら取り出せないようにする？（今回はいつでも取れる仕様にします）
-                if (isFreezing)
-                {
-                    Debug.Log("まだ冷凍中です...");
-                    // 途中で取り出すとリセットするならここで行う
-                    isFreezing = false;
-                    currentTimer = 0f;
-                }
-
                 // プレイヤーに渡す
                 player.PickUpItem(heldItem);
 
-                // アイテム設定リセット（Counterと同じ）
+                // アイテム設定リセット（大きさなどをプレイヤー用に戻す）
                 ItemSettings settings = heldItem.GetComponent<ItemSettings>();
                 if (settings != null)
                 {
@@ -74,14 +49,14 @@ public class Freezer : MonoBehaviour, IInteracttable
                 heldBowl = null;
             }
         }
-        // パターンB：冷凍庫が空（入れる）
+        // --- パターンB：空っぽ（入れる） ---
         else
         {
             if (player.heldItem != null)
             {
                 Bowl bowl = player.heldItem.GetComponent<Bowl>();
 
-                // ★条件チェック：ボウルを持っていて、かつ「冷凍できる状態」か？
+                // 条件チェック：ボウルを持っていて、かつ「冷凍できる状態」か？
                 if (bowl != null && bowl.IsReadyToFreeze())
                 {
                     // プレイヤーから受け取る
@@ -97,15 +72,9 @@ public class Freezer : MonoBehaviour, IInteracttable
                     ItemSettings settings = heldItem.GetComponent<ItemSettings>();
                     if (settings != null) heldItem.transform.localScale = settings.onTableScale;
 
-                    // ★冷凍開始！
                     heldBowl = bowl;
-                    currentTimer = 0f;
-                    isFreezing = true;
-                    Debug.Log("冷凍を開始します...");
-                }
-                else
-                {
-                    Debug.Log("それは冷凍できません（まだ混ざっていないか、違うアイテムです）");
+                    // ★以前あった「isFreezing = true」などは不要です。
+                    // 入れた瞬間からUpdateで AddFreezeProgress が呼ばれ始めます。
                 }
             }
         }

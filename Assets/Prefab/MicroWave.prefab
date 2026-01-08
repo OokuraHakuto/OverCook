@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cookTime: 5
-  burnTime: 5
+  burnTime: 8
   holdPoint: {fileID: 2854295163079585302}
 --- !u!65 &3179789411394113951
 BoxCollider:
