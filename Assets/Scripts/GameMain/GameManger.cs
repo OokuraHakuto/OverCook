@@ -117,11 +117,11 @@ public class GameManager : MonoBehaviour
         Debug.Log("ゲーム終了！");
 
         // ★もし3秒後にリザルト画面（別シーン）に飛ばすなら、下の行の // を外す
-        // Invoke("GoToResultScene", 3f);
+        Invoke("GoToResultScene", 3f);
     }
 
     void GoToResultScene()
     {
-        // SceneManager.LoadScene("ResultScene"); // シーン名を指定
+        SceneManager.LoadScene("Result"); // シーン名を指定
     }
 }

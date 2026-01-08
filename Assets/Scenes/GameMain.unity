@@ -4212,7 +4212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93704372c02bdde4f92448db1e26c74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roundTime: 90
+  roundTime: 2
   timerText: {fileID: 1082270070}
   scoreText: {fileID: 407143515}
   centerText: {fileID: 1923796040}
