@@ -36,7 +36,9 @@ public class PlayerController : MonoBehaviour
     private Coroutine mixMotionCoroutine; // 連打制御用
 
     private Rigidbody rb; // 物理演算を管理するRigidbodyコンポーネント
-    private Vector2 moveInput; // 移動入力（X, Y）を保持する変数
+    private Vector2 moveInput;         // 最終的な移動量
+    private Vector2 gamepadInput;      // パッドからの入力値
+    private Vector2 keyboardInput;     // キーボードからの入力値
 
     private Animator anim;
 
@@ -44,50 +46,10 @@ public class PlayerController : MonoBehaviour
     public Transform handPosition; // アイテムを持つ位置（インスペクタで設定）
     public GameObject heldItem;    // 今持っているアイテム（内部用）
 
-
-
-
-    //#if falseにすると完成版の方のデバッグができるs
-#if UNITY_EDITOR // ▼▼▼ Unityエディタで実行している時だけ、この部分が有効になる ▼▼▼
-
     [Header("【デバッグ用】プレイヤー番号")]
     public int playerID = 1; // 【エディタ専用】プレイヤー番号（1か2）をインスペクタで指定
 
-    // 【エディタ専用】毎フレーム、キーボード入力を直接チェックする
-    void Update()
-    {
-        // まず入力をリセット
-        moveInput = Vector2.zero;
-
-        // playerIDに応じて、WASDか矢印キーの入力を受け取る
-        if (playerID == 1)
-        {
-            if (Input.GetKey(KeyCode.W)) { moveInput.y = 1; }
-            if (Input.GetKey(KeyCode.S)) { moveInput.y = -1; }
-            if (Input.GetKey(KeyCode.A)) { moveInput.x = -1; }
-            if (Input.GetKey(KeyCode.D)) { moveInput.x = 1; }
-        }
-        else if (playerID == 2)
-        {
-            if (Input.GetKey(KeyCode.UpArrow)) { moveInput.y = 1; }
-            if (Input.GetKey(KeyCode.DownArrow)) { moveInput.y = -1; }
-            if (Input.GetKey(KeyCode.LeftArrow)) { moveInput.x = -1; }
-            if (Input.GetKey(KeyCode.RightArrow)) { moveInput.x = 1; }
-        }
-
-        if (playerID == 1 && Input.GetKeyDown(KeyCode.E)) // P1はEキー
-        {
-            DoInteract(); // 共通のインタラクト関数を呼ぶ
-        }
-        else if (playerID == 2 && Input.GetKeyDown(KeyCode.P)) // P2はPキー（など、好きなキーに）
-        {
-            DoInteract(); // 共通のインタラクト関数を呼ぶ
-        }
-    }
-
-#else // ▼▼▼ ゲームをビルドした時（完成版）だけ、この部分が有効になる ▼▼▼
-
-    // 【完成版】Player Inputコンポーネントからイベントとして呼び出される
+    // パッド入力
     public void OnMove(InputAction.CallbackContext context)
     {
         // パッドやキーボードからの入力をVector2として受け取る
@@ -103,11 +65,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-#endif // ▲▲▲ ここで命令は終わり ▲▲▲
-
-
-    // --- 両方のモードで共通して使う処理 ---
-
     // ゲーム開始時に一度だけ呼ばれ、自分自身のコンポーネントを取得する
     void Awake()
     {
@@ -116,6 +73,49 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
+    // 毎フレーム、キーボード入力を直接チェックする
+    void Update()
+    {
+        // キーボード入力をリセット
+        keyboardInput = Vector2.zero;
+
+        // キーボード入力のチェック
+        if (playerID == 1)
+        {
+            if (Input.GetKey(KeyCode.W)) { keyboardInput.y = 1; }
+            if (Input.GetKey(KeyCode.S)) { keyboardInput.y = -1; }
+            if (Input.GetKey(KeyCode.A)) { keyboardInput.x = -1; }
+            if (Input.GetKey(KeyCode.D)) { keyboardInput.x = 1; }
+
+            // インタラクト (Eキー)
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                DoInteract();
+            }
+        }
+        else if (playerID == 2)
+        {
+            if (Input.GetKey(KeyCode.UpArrow)) { keyboardInput.y = 1; }
+            if (Input.GetKey(KeyCode.DownArrow)) { keyboardInput.y = -1; }
+            if (Input.GetKey(KeyCode.LeftArrow)) { keyboardInput.x = -1; }
+            if (Input.GetKey(KeyCode.RightArrow)) { keyboardInput.x = 1; }
+
+            // インタラクト (Pキー)
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                DoInteract();
+            }
+        }
+
+        // パッド入力とキーボード入力を合体させる
+        moveInput = gamepadInput + keyboardInput;
+
+        // 正規化
+        if (moveInput.magnitude > 1f)
+        {
+            moveInput.Normalize();
+        }
+    }
 
 
     // 物理演算のタイミングで一定間隔で呼ばれる
@@ -292,7 +292,7 @@ public class PlayerController : MonoBehaviour
             heldItem.transform.localScale = settings.onPlayerScale;
             heldItem.transform.localPosition = settings.holdPositionOffset;
 
-            // ★追加：回転の適用
+            // 回転の適用
             // Quaternion.Euler で Vector3(x,y,z) を回転データに変換します
             heldItem.transform.localRotation = Quaternion.Euler(settings.onPlayerRotation);
         }
