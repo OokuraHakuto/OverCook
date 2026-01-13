@@ -15,30 +15,37 @@ public class DeliverySpot : MonoBehaviour, IInteracttable
         // プレイヤーが何か持っているか？
         if (player.heldItem != null)
         {
-            // 持っているのが「カップ」かチェック
-            Cup cup = player.heldItem.GetComponent<Cup>();
+            // アイテムの名前を取得して綺麗にする
+            string rawName = player.heldItem.name.Replace("(Clone)", "").Trim();
 
-            // カップで、かつ「中身が入っている(完成品)」なら納品成功！
-            if (cup != null && cup.isFull)
+            // OrderManagerが存在するかチェック
+            if (OrderManager.Instance != null)
             {
-                // 1. スコアを加算
-                // GameManagerが存在する場合のみ実行
-                if (GameManager.Instance != null)
+                // ここで注文マネージャーに「これ合ってる？」と聞く！
+                bool isCorrectOrder = OrderManager.Instance.TryDelivery(rawName);
+
+                if (isCorrectOrder)
                 {
-                    GameManager.Instance.AddScore(scorePerIce);
+                    // --- 正解の処理 ---
+
+                    // スコア加算（基本点 + 注文ボーナスなど）
+                    if (GameManager.Instance != null)
+                    {
+                        GameManager.Instance.AddScore(scorePerIce);
+                    }
+
+                    // アイテムを消す
+                    player.GiveItem();
+
+                    // 成功エフェクトや音など
+                    Debug.Log("納品成功！");
                 }
-
-                // 2. アイテムを消す（納品完了）
-                // PlayerControllerのGiveItemで綺麗に消してもらう
-                string itemName = player.GiveItem();
-
-                // (オプション) 納品成功音とかエフェクトをここで出す
-                Debug.Log(itemName + " を納品しました！");
-            }
-            else
-            {
-                // 完成品じゃない（空のカップやボウルなど）
-                Debug.Log("それは納品できません（完成したアイスを持ってきてね）");
+                else
+                {
+                    // --- 間違いの処理 ---
+                    Debug.Log("注文されていない品です！");
+                    // ここで「ブブー！」というSEを鳴らしたりできる
+                }
             }
         }
     }

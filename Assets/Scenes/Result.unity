@@ -572,7 +572,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 517574971}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1845775865}
+        m_TargetAssemblyTypeName: ResultManager, Assembly-CSharp
+        m_MethodName: OnRetry
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &517574971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1018,7 +1030,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 834536320}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &834536320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2258,6 +2282,7 @@ MonoBehaviour:
   hoshi1: {fileID: 8300000, guid: b5a2ebd1386ebc3469a348857fc8a36d, type: 3}
   hoshi2: {fileID: 8300000, guid: 1d020329d9efbd140baf1d73d64d5b39, type: 3}
   hoshi3: {fileID: 8300000, guid: f10f75709f91a3747bcc065282104110, type: 3}
+  countDuration: 2
 --- !u!4 &1845775866
 Transform:
   m_ObjectHideFlags: 0

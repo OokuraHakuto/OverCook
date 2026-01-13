@@ -163,9 +163,9 @@ MonoBehaviour:
   gaugeObject: {fileID: 5255728778905525110}
   gaugeSlider: {fileID: 8051867934712945477}
   gaugeFillImage: {fileID: 856249768457316642}
-  freezeTimeNeeded: 5
-  cookTimeNeeded: 5
-  burnTimeNeeded: 8
+  freezeTimeNeeded: 4
+  cookTimeNeeded: 4
+  burnTimeNeeded: 7
 --- !u!1 &4236383405617006051
 GameObject:
   m_ObjectHideFlags: 0

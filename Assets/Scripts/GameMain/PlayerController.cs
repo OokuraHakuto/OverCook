@@ -352,7 +352,7 @@ public class PlayerController : MonoBehaviour
         mixMotionCoroutine = StartCoroutine(MixMotionRoutine());
     }
 
-    // 動きを制御するコルーチン
+    // 動きを制御する
     private IEnumerator MixMotionRoutine()
     {
         // --- 混ぜるモード開始 ---

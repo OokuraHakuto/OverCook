@@ -7,7 +7,7 @@ public class CTRLer_1P : MonoBehaviour
 {
     //SoundMgr soundMgr = new SoundMgr();
 
-    /*public GameObject cursor;*/
+    public GameObject cursor;
     int diff;
     public int chara; // 現在選択中のキャラ番号（1～10）
 
@@ -24,6 +24,11 @@ public class CTRLer_1P : MonoBehaviour
     {
         chara = 1; // P1の初期カーソル位置
         diff = 0;
+
+        if (SelectionManager.instance != null)
+        {
+            SelectionManager.instance.difficulty = diff;
+        }
 
         // リストにプレファブが設定されているか確認
         if (characterPrefabs.Length == 0)
@@ -67,16 +72,26 @@ public class CTRLer_1P : MonoBehaviour
         // (この関数は変更なし。P1のA/Dキーを使用)
         if (Input.GetKeyDown("a") && diff > 0)
         {
-            /*cursor.transform.Translate(-10.6f, 33.5f, 0);*/
+            cursor.transform.Translate(-10.6f, 33.5f, 0);
             diff--;
             Debug.Log("Aおうか " + diff);
+
+            if (SelectionManager.instance != null)
+            {
+                SelectionManager.instance.difficulty = diff;
+            }
         }
 
         if (Input.GetKeyDown("d") && diff < 2)
         {
-            /*cursor.transform.Translate(10.6f, -33.5f, 0);*/
+            cursor.transform.Translate(10.6f, -33.5f, 0);
             diff++;
             Debug.Log("Dおうか " + diff);
+
+            if (SelectionManager.instance != null)
+            {
+                SelectionManager.instance.difficulty = diff;
+            }
         }
     }
 

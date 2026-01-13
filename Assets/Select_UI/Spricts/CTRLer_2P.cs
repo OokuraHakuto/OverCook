@@ -25,6 +25,11 @@ public class CTRLer_2P : MonoBehaviour
         chara = 2; // P2の初期カーソル位置
         diff = 0;
 
+        if (SelectionManager.instance != null)
+        {
+            SelectionManager.instance.difficulty = diff;
+        }
+
         // リストにプレファブが設定されているか確認
         if (characterPrefabs.Length == 0)
         {
@@ -39,7 +44,7 @@ public class CTRLer_2P : MonoBehaviour
     void Update()
     {
         SelectChara();
-        //SelectDiff(); // 元のコードでコメントアウトされていたので、そのまま
+        SelectDiff();
     }
 
     public void SelectChara()
@@ -69,12 +74,22 @@ public class CTRLer_2P : MonoBehaviour
         {
             cursor.transform.Translate(-10.6f, 33.5f, 0);
             diff--;
+
+            if (SelectionManager.instance != null)
+            {
+                SelectionManager.instance.difficulty = diff;
+            }
         }
 
         if (Input.GetKeyDown("right") && diff < 2)
         {
             cursor.transform.Translate(10.6f, -33.5f, 0);
             diff++;
+
+            if (SelectionManager.instance != null)
+            {
+                SelectionManager.instance.difficulty = diff;
+            }
         }
     }
 

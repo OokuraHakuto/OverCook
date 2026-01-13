@@ -192,6 +192,12 @@ MonoBehaviour:
   mixClicksNeeded: 10
   normalModel: {fileID: 0}
   crackedModel: {fileID: 0}
+  gaugeObject: {fileID: 0}
+  gaugeSlider: {fileID: 0}
+  gaugeFillImage: {fileID: 0}
+  freezeTimeNeeded: 3
+  cookTimeNeeded: 3
+  burnTimeNeeded: 7
 --- !u!1 &5439357827340677896
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,8 +1,21 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class TitleManager : MonoBehaviour
 {
+    [Header("最初に選択状態にしたいボタン")]
+    public GameObject firstSelectButton;
+
+    void Start()
+    {
+        // ゲーム開始時に、指定したボタンを強制的に選択状態にする
+        if (firstSelectButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(firstSelectButton);
+        }
+    }
+
     // スタートボタン
     public void StartGame()
     {
@@ -19,8 +32,10 @@ public class TitleManager : MonoBehaviour
     // 終了ボタン
     public void QuitGame()
     {
-        
-        Application.Quit();
-        
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }

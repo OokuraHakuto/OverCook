@@ -1228,6 +1228,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1Prefab: {fileID: 0}
   player2Prefab: {fileID: 0}
+  difficulty: 1
 --- !u!4 &636453163
 Transform:
   m_ObjectHideFlags: 0
@@ -2004,6 +2005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0074bf69ab8671a40aad02b908572871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cursor: {fileID: 1145358931}
   chara: 0
   characterPrefabs:
   - {fileID: 8365170978428639843, guid: a99c876e694a34f4f8f70c5faad493bc, type: 3}
