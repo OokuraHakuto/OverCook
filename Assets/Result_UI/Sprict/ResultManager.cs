@@ -16,6 +16,9 @@ public class ResultManager : MonoBehaviour
     [Header("アニメーション時間")]
     public float countDuration = 2.0f;  // 2秒かけてカウントアップ
 
+    // テキスト表示用に内部でカウントアップする変数
+    private float displayScore = 0f;
+
     void Start()
     {
         ReSet();
@@ -29,7 +32,7 @@ public class ResultManager : MonoBehaviour
             // リザルト中はゲームプレイフラグをoff
             GameManager.Instance.isPlaying = false;
         }
-        
+
         //スライダー最大値
         scoreSlider.maxValue = 1500;
 
@@ -66,7 +69,7 @@ public class ResultManager : MonoBehaviour
             twinkF3 = true;
         }
 
-        scoreText.text = scoreSlider.value.ToString("F0");
+        scoreText.text = displayScore.ToString("F0");
 
         if (Input.GetKeyDown("r")) ReSet();
     }
@@ -74,6 +77,7 @@ public class ResultManager : MonoBehaviour
     void ReSet()
     {
         scoreSlider.value = 0;
+        displayScore = 0;
         star1.sprite = blank;
         star2.sprite = blank;
         star3.sprite = blank;

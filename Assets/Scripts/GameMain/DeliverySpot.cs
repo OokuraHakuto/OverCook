@@ -42,9 +42,7 @@ public class DeliverySpot : MonoBehaviour, IInteracttable
                 }
                 else
                 {
-                    // --- 間違いの処理 ---
-                    Debug.Log("注文されていない品です！");
-                    // ここで「ブブー！」というSEを鳴らしたりできる
+                    // --- 間違い ---
                 }
             }
         }

@@ -46,8 +46,8 @@ public class PlayerController : MonoBehaviour
     public Transform handPosition; // アイテムを持つ位置（インスペクタで設定）
     public GameObject heldItem;    // 今持っているアイテム（内部用）
 
-    [Header("【デバッグ用】プレイヤー番号")]
-    public int playerID = 1; // 【エディタ専用】プレイヤー番号（1か2）をインスペクタで指定
+    [Header("プレイヤー番号")]
+    public int playerID = 1; // プレイヤー番号（1か2）をインスペクタで指定
 
     // パッド入力
     public void OnMove(InputAction.CallbackContext context)
@@ -177,23 +177,20 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(rayOrigin, rightDir * interactDistance, Color.cyan, 1.0f);      // 右 = 水色
         Debug.DrawRay(rayOrigin, leftDir * interactDistance, Color.cyan, 1.0f);      // 左 = 水色
 
-        // 1. まずは「真ん中」を調べる
+        // まずは「真ん中」を調べる
         if (CheckRay(rayOrigin, centerDir)) return;
 
-        // 2. もしダメなら「上」を調べる
+        // もしダメなら「上」を調べる
         if (CheckRay(rayOrigin, upDir)) return;
 
-        // 3. もしダメなら「下」を調べる
+        // もしダメなら「下」を調べる
         if (CheckRay(rayOrigin, downDir)) return;
 
-        // 4. もしダメなら「右」を調べる
+        // もしダメなら「右」を調べる
         if (CheckRay(rayOrigin, rightDir)) return;
 
-        // 5. もしダメなら「左」を調べる
+        // もしダメなら「左」を調べる
         if (CheckRay(rayOrigin, leftDir)) return;
-
-        // 5本とも当たらなかった
-        Debug.Log("目の前に何もない");
     }
 
     // Raycastのチェック処理（GetComponentInParentを使う最終版）
@@ -227,6 +224,11 @@ public class PlayerController : MonoBehaviour
     {
         if (heldItem != null) return; // 既に何か持っていたら持てない
 
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySE(AudioManager.Instance.sePlace);
+        }
+
         // 手の位置にアイテムを生成
         heldItem = Instantiate(itemPrefab, handPosition);
 
@@ -247,7 +249,7 @@ public class PlayerController : MonoBehaviour
         if (anim != null)
         {
             anim.SetBool("IsHolding", true);
-            anim.SetTrigger("Pick"); // 拾うモーションも再生するなら
+            anim.SetTrigger("Pick");
         }
     }
 
@@ -257,6 +259,11 @@ public class PlayerController : MonoBehaviour
     public string GiveItem()
     {
         if (heldItem == null) return ""; // 何も持っていない
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySE(AudioManager.Instance.sePlace);
+        }
 
         // アイテムの名前を取得（"(Clone)"という文字を削除して綺麗にする）
         string itemName = heldItem.name.Replace("(Clone)", "");
@@ -268,7 +275,7 @@ public class PlayerController : MonoBehaviour
         if (anim != null)
         {
             anim.SetBool("IsHolding", false);
-            anim.SetTrigger("Put"); // 置くモーションも再生するなら
+            anim.SetTrigger("Put");
         }
 
         return itemName;
@@ -278,6 +285,11 @@ public class PlayerController : MonoBehaviour
     public void PickUpItem(GameObject targetItem)
     {
         if (heldItem != null) return; // 既に何か持っていたら拾えない
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySE(AudioManager.Instance.sePlace);
+        }
 
         heldItem = targetItem; // 持つアイテムを登録
 
@@ -329,9 +341,14 @@ public class PlayerController : MonoBehaviour
             Bowl bowl = heldItem.GetComponent<Bowl>();
             if (bowl != null)
             {
-                // 先ほどBowlスクリプトに追加した（はずの）関数を呼ぶ
                 bowl.OnReleased();
             }
+        }
+
+        if (heldItem != null && AudioManager.Instance != null)
+        {
+            // heldItemがnullになる前にチェック
+            AudioManager.Instance.PlaySE(AudioManager.Instance.sePlace);
         }
 
         heldItem = null; // 参照を切るだけ（オブジェクトは消さない）
@@ -357,10 +374,9 @@ public class PlayerController : MonoBehaviour
     {
         // --- 混ぜるモード開始 ---
         // HandPositionの親を「腕」に変更
-        // worldPositionStays: false にすると、親の位置(0,0,0)にピタッと吸着します
         handPosition.SetParent(mixAnchor, false);
 
-        // アニメーションの長さ分だけ待つ（0.5秒くらい？ 調整してください）
+        // アニメーションの長さ分だけ待つ
         yield return new WaitForSeconds(0.5f);
 
         // --- 混ぜるモード終了 ---

@@ -8,6 +8,7 @@ public class BowlProvider : MonoBehaviour, IInteracttable
     [Header("設定")]
     public GameObject bowlPrefab;
 
+    // ボウルを取り出す
     public void Interact()
     {
         PlayerController player = FindClosestPlayer();
@@ -24,7 +25,6 @@ public class BowlProvider : MonoBehaviour, IInteracttable
             if (settings != null)
             {
                 newBowl.transform.localScale = settings.onPlayerScale;
-                // ★変更：ItemSettingsの値を使うように変更
                 newBowl.transform.localPosition = settings.holdPositionOffset;
             }
             else
@@ -33,11 +33,10 @@ public class BowlProvider : MonoBehaviour, IInteracttable
             }
 
             newBowl.transform.localRotation = Quaternion.identity;
-            Debug.Log("新しいボウルを取り出しました");
         }
     }
 
-    // FindClosestPlayer は省略しますが、他と同じです
+    // プレイヤー探索
     private PlayerController FindClosestPlayer()
     {
         PlayerController[] players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);

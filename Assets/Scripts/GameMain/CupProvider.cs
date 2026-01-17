@@ -30,16 +30,14 @@ public class CupProvider : MonoBehaviour, IInteracttable
                 newCup.transform.localPosition = settings.holdPositionOffset;
                 newCup.transform.localRotation = Quaternion.Euler(settings.onPlayerRotation);
             }
-
-            Debug.Log("カップを取り出しました");
         }
         else
         {
-            Debug.Log("手がふさがっています");
+            //手がふさがっている
         }
     }
 
-    // プレイヤー探索（Counterと同じやつ）
+    // プレイヤー探索
     private PlayerController FindClosestPlayer()
     {
         PlayerController[] players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);

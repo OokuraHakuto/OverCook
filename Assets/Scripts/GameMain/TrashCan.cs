@@ -14,14 +14,14 @@ public class TrashCan : MonoBehaviour, IInteracttable
         if (player.heldItem != null)
         {
             // PlayerControllerにある「GiveItem」を呼ぶだけでOK！
-            // このメソッドが「手持ちアイテムの削除」と「アニメーションのリセット」を全部やってくれます。
+            // このメソッドが「手持ちアイテムの削除」と「アニメーションのリセット」を全部やってくれる。
             string trashedItemName = player.GiveItem();
 
             Debug.Log(trashedItemName + " をゴミ箱に捨てました！");
         }
     }
 
-    // おなじみのプレイヤー探索
+    // プレイヤー探索
     private PlayerController FindClosestPlayer()
     {
         PlayerController[] players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);

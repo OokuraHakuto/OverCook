@@ -25,18 +25,14 @@ public class IngredientCrate : MonoBehaviour, IInteracttable
             {
                 if (heldBowl != null)
                 {
-                    // ★ここが大事：itemPrefabを直接渡す形
+                    // itemPrefabを直接渡す
                     bool added = heldBowl.AddIngredient(itemPrefab);
-
-                    if (added) Debug.Log("ボウルに入れました！");
-                    else Debug.Log("入りません");
                 }
             }
             else
             {
-                // ★持っているのが「ボウル以外（ただの牛乳など）」だった場合
-                // → 「手がふさがってるよ！ボウルがないと混ぜられないよ！」と拒否する
-                Debug.Log("手がふさがっています！材料を2個持つにはボウルが必要です。");
+                // 持っているのが「ボウル以外（ただの牛乳など）」だった場合
+                // 手がふさがっている
             }
         }
         // ---------------------------------------------------------
@@ -50,7 +46,7 @@ public class IngredientCrate : MonoBehaviour, IInteracttable
         }
     }
 
-    // (FindClosestPlayerはそのまま)
+    // プレイヤー探索
     private PlayerController FindClosestPlayer()
     {
         PlayerController[] players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);

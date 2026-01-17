@@ -54,7 +54,7 @@ public class Counter : MonoBehaviour, IInteracttable
                 }
 
                 heldItem = null;
-                Debug.Log("台からアイテムを取りました");
+                //アイテムを取り出した
             }
             // --- ケース2：何か持っている（合体・投入・混ぜる） ---
             else
@@ -70,18 +70,18 @@ public class Counter : MonoBehaviour, IInteracttable
                     // カップが空っぽ(false)で、ボウルからすくい取れたら
                     if (!playerCup.isFull && bowl.TryScoopIceCream())
                     {
-                        // 1. プレイヤーの手にある「空カップ」を消す
+                        // プレイヤーの手にある「空カップ」を消す
                         GameObject emptyCup = player.heldItem;
                         player.ReleaseItem();
                         Destroy(emptyCup);
 
-                        // 2. 「完成アイス」を生成して持たせる
+                        // 「完成アイス」を生成して持たせる
                         if (fullIcePrefab != null)
                         {
                             GameObject newIce = Instantiate(fullIcePrefab);
                             player.PickUpItem(newIce);
 
-                            // サイズや位置の調整（ItemSettingsがあれば自動でやってくれますが念のため）
+                            // サイズや位置の調整
                             ItemSettings settings = newIce.GetComponent<ItemSettings>();
                             if (settings != null)
                             {
@@ -91,7 +91,6 @@ public class Counter : MonoBehaviour, IInteracttable
                             }
                         }
 
-                        Debug.Log("盛り付け完了！");
                         return; // ここで処理終了
                     }
                 }
@@ -103,10 +102,6 @@ public class Counter : MonoBehaviour, IInteracttable
 
                         player.PlayMixAnimation();
                     }
-                    else
-                    {
-                        Debug.Log(bowl.isMixed ? "もう混ざっています" : "まだ溶けていません");
-                    }
                 }
                 // 食材を入れる
                 else if (bowl != null)
@@ -117,12 +112,11 @@ public class Counter : MonoBehaviour, IInteracttable
                         GameObject ingredient = player.heldItem;
                         player.ReleaseItem();
                         Destroy(ingredient);
-                        Debug.Log("ボウルに入れました");
                     }
                 }
                 else
                 {
-                    Debug.Log("手がふさがっています");
+                    //手がふさがっている
                 }
             }
         }
@@ -149,7 +143,7 @@ public class Counter : MonoBehaviour, IInteracttable
                 foreach (Collider c in cols) c.enabled = false;
 
                 heldItem = itemToPlace;
-                Debug.Log("台に置きました");
+                //台に置いた
             }
         }
     }

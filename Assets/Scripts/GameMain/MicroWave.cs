@@ -12,10 +12,23 @@ public class MicrWave : MonoBehaviour, IInteracttable
 
     void Update()
     {
-        // ボウルが入っているなら、ボウル自身の「加熱進行処理」を呼び出す
+        // ボウルが入っているなら
         if (heldBowl != null)
         {
+            // 更新前の状態を覚えておく
+            bool wasMelted = heldBowl.isMelted;
+
+            // 加熱処理
             heldBowl.AddCookProgress(Time.deltaTime);
+
+            // 溶けたかの判定
+            if (!wasMelted && heldBowl.isMelted)
+            {
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlaySE(AudioManager.Instance.seRange);
+                }
+            }
         }
     }
 
@@ -31,6 +44,11 @@ public class MicrWave : MonoBehaviour, IInteracttable
         {
             if (player.heldItem == null) // 手ぶらなら
             {
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlaySE(AudioManager.Instance.sePlace);
+                }
+
                 // プレイヤーに渡す
                 player.PickUpItem(heldItem);
 
@@ -65,6 +83,11 @@ public class MicrWave : MonoBehaviour, IInteracttable
                 // 温められる状態かチェック
                 if (bowl != null && bowl.IsReadyToCook())
                 {
+                    if (AudioManager.Instance != null)
+                    {
+                        AudioManager.Instance.PlaySE(AudioManager.Instance.sePlace);
+                    }
+
                     heldItem = player.heldItem;
                     player.ReleaseItem(); // 手放す
 
@@ -86,18 +109,16 @@ public class MicrWave : MonoBehaviour, IInteracttable
                     heldBowl = bowl;
 
                     heldBowl.OnPutInMicrowave();
-
-                    Debug.Log("🌀 レンジ加熱スタート！");
                 }
                 else if (bowl != null)
                 {
-                    Debug.Log("そのボウルはまだ温められません");
+                    //まだ温められない
                 }
             }
         }
     }
 
-    // プレイヤー探索（いつものやつ）
+    // プレイヤー探索
     private PlayerController FindClosestPlayer()
     {
         PlayerController[] players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
@@ -106,7 +127,10 @@ public class MicrWave : MonoBehaviour, IInteracttable
         foreach (var p in players)
         {
             float dist = Vector3.Distance(transform.position, p.transform.position);
-            if (dist < minDistance) { minDistance = dist; closest = p; }
+            if (dist < minDistance) 
+            {
+                minDistance = dist; closest = p; 
+            }
         }
         return closest;
     }

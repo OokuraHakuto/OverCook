@@ -11,16 +11,4 @@ public class Cup : MonoBehaviour
     [Header("ƒAƒCƒX‚ÌŽí—Þ")]
     // "Vanilla", "Chocolate", "Matcha", "Strawberry" ‚È‚Ç
     public string flavor = "Vanilla";
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

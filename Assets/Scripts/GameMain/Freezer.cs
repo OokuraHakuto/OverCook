@@ -73,8 +73,6 @@ public class Freezer : MonoBehaviour, IInteracttable
                     if (settings != null) heldItem.transform.localScale = settings.onTableScale;
 
                     heldBowl = bowl;
-                    // ★以前あった「isFreezing = true」などは不要です。
-                    // 入れた瞬間からUpdateで AddFreezeProgress が呼ばれ始めます。
                 }
             }
         }

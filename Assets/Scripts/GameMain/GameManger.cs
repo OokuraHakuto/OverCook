@@ -139,6 +139,9 @@ public class GameManager : MonoBehaviour
 
     IEnumerator CountDownRoutine()
     {
+        // カウントダウン中はBGMを止める
+        AudioManager.Instance.StopBGM();
+
         isPlaying = false; // まだ動けない
 
         // 3...
@@ -156,6 +159,10 @@ public class GameManager : MonoBehaviour
         // GO!
         if (centerText != null) centerText.text = "GO!";
         isPlaying = true; // ここからゲーム開始！
+
+        AudioManager.Instance.PlaySE(AudioManager.Instance.seWhistle);
+
+        AudioManager.Instance.PlayBGM();
 
         yield return new WaitForSeconds(1f);
         if (centerText != null) centerText.text = ""; // テキストを消す
@@ -176,9 +183,9 @@ public class GameManager : MonoBehaviour
             centerText.text = "FINISH!";
         }
 
-        Debug.Log("ゲーム終了！");
+        AudioManager.Instance.PlaySE(AudioManager.Instance.seWhistle);
 
-        // もし3秒後にリザルト画面（別シーン）に飛ばすなら、下の行の // を外す
+        // 3秒後にリザルト画面（別シーン）に飛ばす
         Invoke("GoToResultScene", 3f);
     }
 

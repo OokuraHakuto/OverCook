@@ -66,7 +66,16 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
         if (itemName == "Item_Milk" && !hasMilk) { hasMilk = true; success = true; }
         else if (itemName == "Item_Vanilla" && !hasVanilla) { hasVanilla = true; success = true; }
 
-        if (success) UpdateVisual();
+        if (success)
+        {
+            UpdateVisual();
+
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySE(AudioManager.Instance.seDrop);
+            }
+        }
+
         return success;
     }
 
@@ -77,6 +86,11 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
         if (!IsReadyToMix()) return;
 
         currentMixClicks++;
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySE(AudioManager.Instance.seMix);
+        }
 
         // ¬‚º‚é‚Íu—ÎFv
         SetGaugeColor(Color.green);
@@ -92,7 +106,6 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
     public void MixComplete()
     {
         isMixed = true;
-        Debug.Log("ƒ{ƒEƒ‹‚Ì’†g‚ª¬‚´‚è‚Ü‚µ‚½I");
         UpdateVisual();
     }
 
@@ -151,8 +164,7 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
             // Å‚°‚Ìis“xi0.0 ` 1.0j
             float burnProgress = (currentCookTimer - cookTimeNeeded) / burnTimeNeeded;
 
-            // š‚±‚±‚ª•ÏX“_I
-            // ƒQ[ƒW‚Ì—Ê‚Íu1.0i–ƒ^ƒ“jv‚ÅŒÅ’èI2–{–Ú‚Ío‚µ‚Ü‚¹‚ñB
+            // ƒQ[ƒW‚Ì—Ê‚Íu1.0i–ƒ^ƒ“jv‚ÅŒÅ’èI2–{–Ú‚Ío‚³‚È‚¢
             UpdateGauge(1.0f);
 
             // ‚»‚Ì‘ã‚í‚èAF‚ğu—Î(ˆÀ‘S) ¨ Ô(ŠëŒ¯)v‚Ö™X‚É•Ï‰»‚³‚¹‚é
@@ -192,7 +204,7 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
     // Œ©‚½–Ú‚ÌON/OFF‚ğØ‚è‘Ö‚¦‚é•Ö—˜ŠÖ”
     private void ToggleModelVisibility(bool isVisible)
     {
-        // 1. ’†gi‰t‘Ì‚È‚Çj
+        // ’†gi‰t‘Ì‚È‚Çj
         if (contentSphere != null)
         {
             // ’†g‚ª“ü‚Á‚Ä‚¢‚é‚¾‚¯•\¦§Œä‚É]‚¤
@@ -201,13 +213,17 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
             else contentSphere.SetActive(false);
         }
 
-        // 2. ƒ{ƒEƒ‹‚ÌŠí
+        // ƒ{ƒEƒ‹‚ÌŠí
         if (normalModel != null && !isCracked) normalModel.SetActive(isVisible);
         if (crackedModel != null && isCracked) crackedModel.SetActive(isVisible);
 
         // ‚à‚µƒ{ƒEƒ‹‚ÌŠí©‘Ì‚É MeshRenderer ‚ª‚Â‚¢‚Ä‚¢‚éê‡
         Renderer r = GetComponent<Renderer>();
-        if (r != null) r.enabled = isVisible;
+
+        if (r != null)
+        {
+            r.enabled = isVisible;
+        }
     }
 
     //‚Á‚½‚Æ‚«‚ÌƒQ[ƒW‚ğŠÇ—‚·‚é
@@ -322,13 +338,34 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
         PlayerController[] players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
         PlayerController closest = null;
         float minDistance = 6.0f;
-        foreach (var p in players) { float dist = Vector3.Distance(transform.position, p.transform.position); if (dist < minDistance) { minDistance = dist; closest = p; } }
+
+        foreach (var p in players) 
+        { 
+            float dist = Vector3.Distance(transform.position, p.transform.position);
+            if (dist < minDistance)
+            {
+                minDistance = dist; closest = p; 
+            } 
+        }
+
         return closest;
     }
 
-    public void Cook() { isMelted = true; UpdateVisual(); }
-    public bool IsReadyToCook() { return hasMilk && hasVanilla && !isMelted; }
-    public void Burn() { isBurnt = true; UpdateVisual(); }
+    public void Cook() 
+    {
+        isMelted = true; UpdateVisual(); 
+    }
+
+    public bool IsReadyToCook() 
+    {
+        return hasMilk && hasVanilla && !isMelted; 
+    }
+
+    public void Burn() 
+    {
+        isBurnt = true; UpdateVisual(); 
+    }
+
 
     // —â“€ŒÉ‚É“ü‚ê‚Ä‚à‚¢‚¢ó‘Ô‚©Hi¬‚´‚Á‚Ä‚¢‚ÄA‚Ü‚¾“€‚Á‚Ä‚¢‚È‚¢‚È‚çOKj
     public bool IsReadyToFreeze()
@@ -340,9 +377,10 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
     public void Freeze()
     {
         isFrozen = true;
-        // ”O‚Ì‚½‚ß‘¼‚Ìƒtƒ‰ƒO‚Í®—‚µ‚Ä‚à‚¢‚¢‚Å‚·‚ªA‚Æ‚è‚ ‚¦‚¸‚»‚Ì‚Ü‚Ü‚Å
-        Debug.Log("ƒAƒCƒX‚ªŠ®¬‚µ‚Ü‚µ‚½I");
         UpdateVisual();
+
+        AudioManager.Instance.seSource.pitch = 1.5f;
+        AudioManager.Instance.seSource.PlayOneShot(AudioManager.Instance.seRange);
     }
 
     // ƒJƒbƒv‚©‚çŒÄ‚Î‚ê‚éu·‚è•t‚¯ˆ—v
@@ -367,7 +405,5 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
 
         if (normalModel != null) normalModel.SetActive(false); // •’Ê‚Ì‚ğÁ‚·
         if (crackedModel != null) crackedModel.SetActive(true); // Š„‚ê‚½‚Ì‚ğo‚·
-
-        Debug.Log("ƒ{ƒEƒ‹‚©‚çƒAƒCƒX‚ğæ‚è‚Ü‚µ‚½Iƒ{ƒEƒ‹‚Í‚Ğ‚ÑŠ„‚ê‚Ü‚µ‚½B");
     }
 }

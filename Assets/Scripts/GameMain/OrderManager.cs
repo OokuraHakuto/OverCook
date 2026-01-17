@@ -47,6 +47,8 @@ public class OrderManager : MonoBehaviour
 
     void Awake()
     {
+        Time.timeScale = 1f;
+
         if (Instance == null)
         {
             Instance = this;
@@ -98,8 +100,6 @@ public class OrderManager : MonoBehaviour
 
         float result = Random.Range(range.x, range.y);
 
-        Debug.Log($"現在の難易度: {diff}({SelectionManager.instance.difficulty}) / 次の注文まで: {result:F2}秒");
-
         return result;
     }
 
@@ -108,8 +108,12 @@ public class OrderManager : MonoBehaviour
     {
         if (currentOrders.Count >= maxOrders)
         {
-            Debug.Log("注文がいっぱいです！");
             return; // ここで処理を終わらせる
+        }
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySE(AudioManager.Instance.seChime);
         }
 
         // ランダムにメニューを選ぶ
@@ -149,15 +153,23 @@ public class OrderManager : MonoBehaviour
 
         if (matchedOrder != null)
         {
-            Debug.Log("注文一致！: " + deliveredItemName);
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySE(AudioManager.Instance.seSuccess);
+            }
 
             // 成功した注文を消す
             RemoveOrder(matchedOrder);
+
             return true; // 成功！
         }
         else
         {
-            Debug.Log("注文違いまたは注文なし: " + deliveredItemName);
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySE(AudioManager.Instance.seFail);
+            }
+
             return false; // 失敗...
         }
     }
