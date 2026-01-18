@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2598926767870410483}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: IdleAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: -6244305930673706530}
   - component: {fileID: -8704719140258386731}
   - component: {fileID: -4915896492592523218}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Penguin06_Anim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,6 +121,8 @@ MonoBehaviour:
   handPosition: {fileID: 5911886778776605755}
   heldItem: {fileID: 0}
   playerID: 1
+  throwForceForward: 30
+  throwForceUp: 5
 --- !u!114 &-6244305930673706530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,7 +230,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 512587522749514184}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MixAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -259,7 +261,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5911886778776605755}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: HandPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,6 +351,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: penguin06_leftArm
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4af6f5db123dc6341b22a8bc01b21d79, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 4af6f5db123dc6341b22a8bc01b21d79, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -413,6 +423,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 4af6f5db123dc6341b22a8bc01b21d79, type: 3}
       propertyPath: m_Name
       value: penguin06_rightArm
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4af6f5db123dc6341b22a8bc01b21d79, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 4af6f5db123dc6341b22a8bc01b21d79, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -492,6 +510,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: penguin06_leftLeg
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 48116775cd868fe49bfaef86b7f212f4, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 48116775cd868fe49bfaef86b7f212f4, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -554,6 +580,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: penguin06_rightLeg
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 48116775cd868fe49bfaef86b7f212f4, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 48116775cd868fe49bfaef86b7f212f4, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -615,6 +649,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e89dcf72ff8c60e4fb2bdc0976ba6aaa, type: 3}
       propertyPath: m_Name
       value: penguin06_body
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e89dcf72ff8c60e4fb2bdc0976ba6aaa, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: e89dcf72ff8c60e4fb2bdc0976ba6aaa, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

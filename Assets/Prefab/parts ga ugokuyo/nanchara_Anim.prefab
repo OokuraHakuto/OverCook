@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3332793145337308260}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MixAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7827931115270069661}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: HandPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3113895890156339398}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: IdleAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 5793330207167535188}
   - component: {fileID: 468001919793890810}
   - component: {fileID: -7482327832305676814}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: nanchara_Anim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,6 +182,8 @@ MonoBehaviour:
   handPosition: {fileID: 7827931115270069661}
   heldItem: {fileID: 0}
   playerID: 1
+  throwForceForward: 30
+  throwForceUp: 5
 --- !u!114 &5793330207167535188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,6 +334,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: nanchara_runnyNose
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 336c8979f0af9fa419633e6259e5e19f, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 336c8979f0af9fa419633e6259e5e19f, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -393,6 +403,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ffb5dbd9fe26fdc4baf2dfdb329da4d7, type: 3}
       propertyPath: m_Name
       value: nanchara_head
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ffb5dbd9fe26fdc4baf2dfdb329da4d7, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: ffb5dbd9fe26fdc4baf2dfdb329da4d7, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -458,6 +476,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 4de241945a6dc214cb899bace711d1bb, type: 3}
       propertyPath: m_Name
       value: nanchara_rightLeg
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4de241945a6dc214cb899bace711d1bb, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 4de241945a6dc214cb899bace711d1bb, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -536,6 +562,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 4de241945a6dc214cb899bace711d1bb, type: 3}
       propertyPath: m_Name
       value: nanchara_leftLeg
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4de241945a6dc214cb899bace711d1bb, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 4de241945a6dc214cb899bace711d1bb, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

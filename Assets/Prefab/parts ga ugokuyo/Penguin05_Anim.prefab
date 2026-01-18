@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5649132457849419083}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: HandPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5236483411437616114}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: IdleAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,7 +77,7 @@ GameObject:
   - component: {fileID: -8423506649240246772}
   - component: {fileID: 9175256261046514655}
   - component: {fileID: 692371858861118437}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Penguin05_Anim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,6 +152,8 @@ MonoBehaviour:
   handPosition: {fileID: 5649132457849419083}
   heldItem: {fileID: 0}
   playerID: 1
+  throwForceForward: 30
+  throwForceUp: 5
 --- !u!114 &-8423506649240246772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,7 +261,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4279380786824760615}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MixAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,6 +351,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: penguin05_leftLeg
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a62e36fe9307baa47a84d74d4d2572e2, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: a62e36fe9307baa47a84d74d4d2572e2, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -427,6 +437,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: penguin05_leftArm
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: dcd05c81b853e4c4faf92b0345f25ee9, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: dcd05c81b853e4c4faf92b0345f25ee9, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -492,6 +510,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: penguin05_rightLeg
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a62e36fe9307baa47a84d74d4d2572e2, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: a62e36fe9307baa47a84d74d4d2572e2, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -554,6 +580,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: penguin05_rightArm
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: dcd05c81b853e4c4faf92b0345f25ee9, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: dcd05c81b853e4c4faf92b0345f25ee9, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -615,6 +649,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 94cb5d08d2bd9164ea8990a7c97a3715, type: 3}
       propertyPath: m_Name
       value: penguin05_body
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 94cb5d08d2bd9164ea8990a7c97a3715, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 94cb5d08d2bd9164ea8990a7c97a3715, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

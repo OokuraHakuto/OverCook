@@ -102,9 +102,20 @@ public class MicrWave : MonoBehaviour, IInteracttable
                     ItemSettings settings = heldItem.GetComponent<ItemSettings>();
                     if (settings != null) heldItem.transform.localScale = settings.onTableScale;
 
+                    // 物理演算を止める
+                    Rigidbody rb = heldItem.GetComponent<Rigidbody>();
+                    if (rb != null)
+                    {
+                        rb.isKinematic = true;
+                        rb.useGravity = false;
+                    }
+
                     // コライダーを復活させる（念のため）
                     Collider[] cols = heldItem.GetComponentsInChildren<Collider>();
-                    foreach (Collider c in cols) c.enabled = true;
+                    foreach (Collider c in cols)
+                    {
+                        c.enabled = false;
+                    }
 
                     heldBowl = bowl;
 

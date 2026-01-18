@@ -49,6 +49,10 @@ public class PlayerController : MonoBehaviour
     [Header("プレイヤー番号")]
     public int playerID = 1; // プレイヤー番号（1か2）をインスペクタで指定
 
+    [Header("投げる設定")]
+    public float throwForceForward = 10f; // 前に飛ばす力
+    public float throwForceUp = 5f;       // 上に浮かせる力
+
     // パッド入力
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -92,6 +96,12 @@ public class PlayerController : MonoBehaviour
             {
                 DoInteract();
             }
+
+            // 投げる
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                ThrowItem();
+            }
         }
         else if (playerID == 2)
         {
@@ -104,6 +114,12 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.P))
             {
                 DoInteract();
+            }
+
+            //投げる
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                ThrowItem();
             }
         }
 
@@ -148,49 +164,112 @@ public class PlayerController : MonoBehaviour
     }
 
 
+    // 物を投げる処理
+    public void ThrowItem()
+    {
+        // 何も持ってなかったら投げられない
+        if (heldItem == null) return;
+
+        // ボウル側の「持たれているフラグ」を解除する
+        Bowl bowl = heldItem.GetComponent<Bowl>();
+        if (bowl != null)
+        {
+            bowl.OnReleased();
+        }
+
+        // 親子関係を解除（手から離す）
+        heldItem.transform.SetParent(null);
+
+        // 物理演算と当たり判定を復活させる
+        Rigidbody itemRb = heldItem.GetComponent<Rigidbody>();
+        Collider[] cols = heldItem.GetComponentsInChildren<Collider>();
+        Collider playerCol = GetComponent<Collider>();
+
+        // コライダー復活
+        foreach (Collider c in cols)
+        {
+            c.enabled = true;
+
+            if (playerCol != null)
+            {
+                Physics.IgnoreCollision(c, playerCol, true);
+            }
+        }
+
+        // もし親にコライダーがあればそれも復活
+        Collider parentCol = heldItem.GetComponent<Collider>();
+        if (parentCol != null) parentCol.enabled = true;
+
+        // 物理演算ON
+        if (itemRb != null)
+        {
+            itemRb.isKinematic = false; // 物理に従うようにする
+            itemRb.useGravity = true;   // 重力をON
+
+            // 力を加える（プレイヤーの向いている方向 + 上方向）
+            Vector3 throwDir = transform.forward * throwForceForward + Vector3.up * throwForceUp;
+            itemRb.AddForce(throwDir, ForceMode.Impulse); // 瞬間的な力を加える
+        }
+
+        // アニメーション等の処理
+        if (anim != null)
+        {
+            anim.SetBool("IsHolding", false);
+            anim.SetTrigger("Put"); // 置くモーションを流用
+        }
+
+        // 投げる音
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySE(AudioManager.Instance.seThrow);
+        }
+
+        // 手持ち情報を空にする
+        heldItem = null;
+    }
+
+
     // 「インタラクトする」という実際の行動（両方のモードから呼ばれる）
     private void DoInteract()
     {
         if (GameManager.Instance != null && !GameManager.Instance.isPlaying) return;
 
-        // 1. 発射地点（胸の高さ）
+        // 発射地点（胸の高さ）
         Vector3 rayOrigin = transform.position + Vector3.up * 1f;
 
-        // 2. 基本の方向ベクトルを計算
+        // 基本の方向ベクトルを計算
         Vector3 forward = transform.forward;
         Vector3 upward = transform.up * verticalAngle;
         Vector3 downward = -transform.up * verticalAngle;
         Vector3 right = transform.right * interactWidth;
         Vector3 left = -transform.right * interactWidth;
 
-        // 3. 5つの最終的な「発射方向」を計算
+        // 5つの最終的な「発射方向」を計算
         Vector3 centerDir = forward.normalized;
         Vector3 upDir = (forward + upward).normalized;
         Vector3 downDir = (forward + downward).normalized;
         Vector3 rightDir = (forward + right).normalized;
         Vector3 leftDir = (forward + left).normalized;
 
-        // 5方向を視覚的にデバッグ表示する (Sceneビューで確認できます)
-        Debug.DrawRay(rayOrigin, centerDir * interactDistance, Color.red, 1.0f);    // 真ん中 = 赤
-        Debug.DrawRay(rayOrigin, upDir * interactDistance, Color.yellow, 1.0f);     // 上 = 黄色
-        Debug.DrawRay(rayOrigin, downDir * interactDistance, Color.yellow, 1.0f);     // 下 = 黄色
-        Debug.DrawRay(rayOrigin, rightDir * interactDistance, Color.cyan, 1.0f);      // 右 = 水色
-        Debug.DrawRay(rayOrigin, leftDir * interactDistance, Color.cyan, 1.0f);      // 左 = 水色
+        //足元を狙う用も用意
+        Vector3 feetDir = (forward * 0.5f + Vector3.down * 1.0f).normalized;
 
-        // まずは「真ん中」を調べる
+        // レイキャストの優先順位
+        // 正面（テーブル作業優先）
         if (CheckRay(rayOrigin, centerDir)) return;
 
-        // もしダメなら「上」を調べる
+        // 上
         if (CheckRay(rayOrigin, upDir)) return;
 
-        // もしダメなら「下」を調べる
+        // 左右（少しズレてもテーブル拾えるように）
+        if (CheckRay(rayOrigin, rightDir)) return;
+        if (CheckRay(rayOrigin, leftDir)) return;
+        
+        // 4位：斜め下（少し離れた床のもの）
         if (CheckRay(rayOrigin, downDir)) return;
 
-        // もしダメなら「右」を調べる
-        if (CheckRay(rayOrigin, rightDir)) return;
-
-        // もしダメなら「左」を調べる
-        if (CheckRay(rayOrigin, leftDir)) return;
+        // 5位：足元（真下に落ちたもの
+        if (CheckRay(rayOrigin, feetDir)) return;
     }
 
     // Raycastのチェック処理（GetComponentInParentを使う最終版）
@@ -243,8 +322,13 @@ public class PlayerController : MonoBehaviour
             c.enabled = false;
         }
 
-        Collider itemCol = heldItem.GetComponent<Collider>();
-        if (itemCol != null) itemCol.enabled = false;
+        Rigidbody itemRb = heldItem.GetComponent<Rigidbody>();
+        if (itemRb != null)
+        {
+            itemRb.isKinematic = true;  // 物理演算を止める
+            itemRb.useGravity = false;  // 重力を切る
+            itemRb.velocity = Vector3.zero;
+        }
 
         if (anim != null)
         {
@@ -318,7 +402,12 @@ public class PlayerController : MonoBehaviour
 
         // 物理演算と当たり判定を無効化（持っている間は暴れないように）
         Rigidbody itemRb = heldItem.GetComponent<Rigidbody>();
-        if (itemRb != null) itemRb.isKinematic = true;
+        if (itemRb != null)
+        {
+            itemRb.isKinematic = true; // 持ってるときは物理OFF
+            itemRb.useGravity = false; // 重力もOFFにしておくのが安全
+            itemRb.velocity = Vector3.zero; // 前の勢いを消す
+        }
 
         Collider[] cols = heldItem.GetComponentsInChildren<Collider>();
         foreach (Collider c in cols)

@@ -45,6 +45,8 @@ public class ResultManager : MonoBehaviour
 
     void Update()
     {
+        displayScore = scoreSlider.value;
+
         if (scoreSlider.value >= 500 && twinkF1 == false)
         {
             AS.PlayOneShot(hoshi1);

@@ -23,6 +23,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip seSuccess;   // 納品成功（チャリーン）
     public AudioClip seFail;      // 納品失敗
     public AudioClip sePlace;     // 置く・拾う
+    public AudioClip seThrow;     // 投げる
 
     void Awake()
     {
