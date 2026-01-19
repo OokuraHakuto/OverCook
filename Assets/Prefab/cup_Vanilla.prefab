@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1019709511261932917}
   - component: {fileID: 9041719550321978468}
   - component: {fileID: -8649050638289897983}
+  - component: {fileID: 7085926985867263453}
   m_Layer: 6
   m_Name: cup_Vanilla
   m_TagString: Untagged
@@ -115,6 +116,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isFull: 1
   flavor: Vanilla
+--- !u!114 &7085926985867263453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7126815739307819046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae1b24531a429b04da3a4eeb3dcd4b3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5418210147647298862
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1414743097801419092}
   - component: {fileID: 8281093379971432219}
   - component: {fileID: -3725603293232523258}
+  - component: {fileID: 2408125772269650112}
   m_Layer: 6
   m_Name: cup_matcha
   m_TagString: Untagged
@@ -115,6 +116,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isFull: 1
   flavor: Vanilla
+--- !u!114 &2408125772269650112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4640946579425866607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae1b24531a429b04da3a4eeb3dcd4b3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1110703294124798307
 PrefabInstance:
   m_ObjectHideFlags: 0

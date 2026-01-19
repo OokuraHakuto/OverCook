@@ -124,7 +124,6 @@ public class GameManager : MonoBehaviour
     {
         currentScore += amount;
         UpdateScoreDisplay();
-        Debug.Log("現在のスコア: " + currentScore);
     }
 
     // スコア表示を更新
@@ -184,6 +183,9 @@ public class GameManager : MonoBehaviour
         }
 
         AudioManager.Instance.PlaySE(AudioManager.Instance.seWhistle);
+
+        //BGMを止める
+        AudioManager.Instance.StopBGM();
 
         // 3秒後にリザルト画面（別シーン）に飛ばす
         Invoke("GoToResultScene", 3f);

@@ -2,10 +2,6 @@ using System.Collections;
 using System.Net;
 using UnityEngine;
 using UnityEngine.InputSystem;
-// 完成版（ビルド時）でのみInput Systemを読み込む
-#if !UNITY_EDITOR
-using UnityEngine.InputSystem;
-#endif
 
 public class PlayerController : MonoBehaviour
 {

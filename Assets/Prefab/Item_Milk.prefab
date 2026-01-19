@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 4485119032606169385}
   - component: {fileID: 2874837936764209967}
   - component: {fileID: 5653265688951805029}
+  - component: {fileID: 1066183979841604971}
   m_Layer: 6
   m_Name: Item_Milk
   m_TagString: Untagged
@@ -181,6 +182,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onTableScale: {x: 0.3, y: 0.3, z: 0.3}
-  onPlayerScale: {x: 0.3, y: 0.3, z: 0.3}
+  onPlayerScale: {x: 0.2, y: 0.2, z: 0.2}
   holdPositionOffset: {x: 0, y: 0, z: 0}
   onPlayerRotation: {x: 0, y: 0, z: 0}
+--- !u!114 &1066183979841604971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7500929557964159404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae1b24531a429b04da3a4eeb3dcd4b3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4821803193061611914}
   - component: {fileID: 5963545138532031981}
   - component: {fileID: -8295293630248757546}
+  - component: {fileID: 9121260834586310364}
   m_Layer: 6
   m_Name: ice_empty
   m_TagString: Untagged
@@ -114,6 +115,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isFull: 0
   flavor: Vanilla
+--- !u!114 &9121260834586310364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7579109145091769260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae1b24531a429b04da3a4eeb3dcd4b3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7453447078430354063
 PrefabInstance:
   m_ObjectHideFlags: 0

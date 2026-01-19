@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1287401045962267056}
   - component: {fileID: 1947425234166957964}
   - component: {fileID: 8601440259003356218}
+  - component: {fileID: -1379727993537098669}
   m_Layer: 6
   m_Name: cup_Strawberry
   m_TagString: Untagged
@@ -115,6 +116,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isFull: 1
   flavor: Vanilla
+--- !u!114 &-1379727993537098669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5355881314694440117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae1b24531a429b04da3a4eeb3dcd4b3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5942739498217939582
 PrefabInstance:
   m_ObjectHideFlags: 0

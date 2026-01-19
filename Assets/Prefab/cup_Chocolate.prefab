@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8530036478930418394}
   - component: {fileID: -1697410037503784286}
   - component: {fileID: 3185987314235399861}
+  - component: {fileID: 1963598835248459538}
   m_Layer: 6
   m_Name: cup_Chocolate
   m_TagString: Untagged
@@ -115,6 +116,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isFull: 1
   flavor: Vanilla
+--- !u!114 &1963598835248459538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8768650284142359692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae1b24531a429b04da3a4eeb3dcd4b3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4022777784197232182
 PrefabInstance:
   m_ObjectHideFlags: 0

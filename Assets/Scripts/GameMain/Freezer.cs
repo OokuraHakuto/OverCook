@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Freezer : MonoBehaviour, IInteracttable
@@ -33,6 +32,11 @@ public class Freezer : MonoBehaviour, IInteracttable
         {
             if (player.heldItem == null)
             {
+                if (heldBowl != null)
+                {
+                    heldBowl.OnPickedUp();
+                }
+
                 // ÉvÉåÉCÉÑÅ[Ç…ìnÇ∑
                 player.PickUpItem(heldItem);
 
