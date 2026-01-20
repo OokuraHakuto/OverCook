@@ -743,8 +743,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'BGM '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 137ad3bf239a574449cc2d2589b58f9e, type: 2}
-  m_sharedMaterial: {fileID: -1747905400146316513, guid: 137ad3bf239a574449cc2d2589b58f9e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9c3009cb812831e4da7d08832ce13f15, type: 2}
+  m_sharedMaterial: {fileID: 5970946666489152295, guid: 9c3009cb812831e4da7d08832ce13f15, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1082,8 +1082,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 137ad3bf239a574449cc2d2589b58f9e, type: 2}
-  m_sharedMaterial: {fileID: -1747905400146316513, guid: 137ad3bf239a574449cc2d2589b58f9e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9c3009cb812831e4da7d08832ce13f15, type: 2}
+  m_sharedMaterial: {fileID: 5970946666489152295, guid: 9c3009cb812831e4da7d08832ce13f15, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
