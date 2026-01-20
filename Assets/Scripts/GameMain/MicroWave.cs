@@ -1,44 +1,148 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MicrWave : MonoBehaviour, IInteracttable
 {
-    [Header("—n‚©‚·‚Ì‚É‚©‚©‚éŠÔ")]
-    public float meltTime = 5.0f;
+    [Header("è¨­å®š")]
+    public Transform holdPoint;   // ãƒœã‚¦ãƒ«ã‚’ç½®ãå ´æ‰€
 
-    //—n‚©‚µ‚Ä‚¢‚é“r’†‚©‚Ç‚¤‚©
-    private bool isMelting = false;
+    private GameObject heldItem;
+    private Bowl heldBowl;        // ä»Šä¸­ã«å…¥ã£ã¦ã„ã‚‹ãƒœã‚¦ãƒ«
+
+    void Update()
+    {
+        // ãƒœã‚¦ãƒ«ãŒå…¥ã£ã¦ã„ã‚‹ãªã‚‰
+        if (heldBowl != null)
+        {
+            // æ›´æ–°å‰ã®çŠ¶æ…‹ã‚’è¦šãˆã¦ãŠã
+            bool wasMelted = heldBowl.isMelted;
+
+            // åŠ ç†±å‡¦ç†
+            heldBowl.AddCookProgress(Time.deltaTime);
+
+            // æº¶ã‘ãŸã‹ã®åˆ¤å®š
+            if (!wasMelted && heldBowl.isMelted)
+            {
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlaySE(AudioManager.Instance.seRange);
+                }
+            }
+        }
+    }
 
     public void Interact()
     {
-        // ‚à‚µ—n‚©‚µ’†‚Å‚È‚¯‚ê‚ÎA—n‚©‚·ˆ—‚ğŠJn‚·‚é
-        if (!isMelting)
+        PlayerController player = FindClosestPlayer();
+        if (player == null) return;
+
+        // ---------------------------------------------------------
+        // ãƒ‘ã‚¿ãƒ¼ãƒ³Aï¼šãƒ¬ãƒ³ã‚¸ã«ãƒœã‚¦ãƒ«ãŒã‚ã‚‹ï¼ˆå–ã‚Šå‡ºã™ï¼‰
+        // ---------------------------------------------------------
+        if (heldItem != null)
         {
-            Debug.Log("ƒŒƒ“ƒW‚ÌInteract()‚ªŒÄ‚Î‚ê‚Ü‚µ‚½I");
-            StartMeltingProcess();
+            if (player.heldItem == null) // æ‰‹ã¶ã‚‰ãªã‚‰
+            {
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlaySE(AudioManager.Instance.sePlace);
+                }
+
+                // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«æ¸¡ã™
+                player.PickUpItem(heldItem);
+
+                // ã‚¢ã‚¤ãƒ†ãƒ è¨­å®šãƒªã‚»ãƒƒãƒˆ
+                ItemSettings settings = heldItem.GetComponent<ItemSettings>();
+                if (settings != null)
+                {
+                    heldItem.transform.localScale = settings.onPlayerScale;
+                    heldItem.transform.localPosition = settings.holdPositionOffset;
+                    heldItem.transform.localRotation = Quaternion.Euler(settings.onPlayerRotation);
+                }
+
+                if (heldBowl != null)
+                {
+                    heldBowl.OnPickedUp();
+                }
+
+                // ãƒªã‚»ãƒƒãƒˆ
+                heldItem = null;
+                heldBowl = null;
+            }
         }
+        // =========================================================
+        // ãƒ‘ã‚¿ãƒ¼ãƒ³Bï¼šãƒ¬ãƒ³ã‚¸ãŒç©º â†’ ãƒœã‚¦ãƒ«ã‚’å…¥ã‚Œã‚‹
+        // =========================================================
         else
         {
-            Debug.Log("¡A—n‚©‚µ’†‚Å‚·I");
+            if (player.heldItem != null)
+            {
+                Bowl bowl = player.heldItem.GetComponent<Bowl>();
+
+                // æ¸©ã‚ã‚‰ã‚Œã‚‹çŠ¶æ…‹ã‹ãƒã‚§ãƒƒã‚¯
+                if (bowl != null && bowl.IsReadyToCook())
+                {
+                    if (AudioManager.Instance != null)
+                    {
+                        AudioManager.Instance.PlaySE(AudioManager.Instance.sePlace);
+                    }
+
+                    heldItem = player.heldItem;
+                    player.ReleaseItem(); // æ‰‹æ”¾ã™
+
+                    // ãƒ¬ãƒ³ã‚¸ã®ä¸­ã«ç§»å‹•
+                    heldItem.transform.SetParent(holdPoint);
+                    heldItem.transform.localPosition = Vector3.zero;
+                    heldItem.transform.localRotation = Quaternion.identity;
+
+                    heldItem.transform.localScale = Vector3.one;
+
+                    // ã‚¹ã‚±ãƒ¼ãƒ«èª¿æ•´
+                    ItemSettings settings = heldItem.GetComponent<ItemSettings>();
+                    if (settings != null) heldItem.transform.localScale = settings.onTableScale;
+
+                    // ç‰©ç†æ¼”ç®—ã‚’æ­¢ã‚ã‚‹
+                    Rigidbody rb = heldItem.GetComponent<Rigidbody>();
+                    if (rb != null)
+                    {
+                        rb.isKinematic = true;
+                        rb.useGravity = false;
+                    }
+
+                    // ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’å¾©æ´»ã•ã›ã‚‹ï¼ˆå¿µã®ãŸã‚ï¼‰
+                    Collider[] cols = heldItem.GetComponentsInChildren<Collider>();
+                    foreach (Collider c in cols)
+                    {
+                        c.enabled = false;
+                    }
+
+                    heldBowl = bowl;
+
+                    heldBowl.OnPutInMicrowave();
+                }
+                else if (bowl != null)
+                {
+                    //ã¾ã æ¸©ã‚ã‚‰ã‚Œãªã„
+                }
+            }
         }
     }
 
-    private void StartMeltingProcess()
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æ¢ç´¢
+    private PlayerController FindClosestPlayer()
     {
-        isMelting = true;
-        Debug.Log("Ş—¿‚ğ—n‚©‚µn‚ß‚Ü‚·...(" + meltTime + "•b)");
-
-        //‚±‚±‚ÉŞ—¿‚ğ‚Á‚Ä‚¢‚È‚¢‚Æ‚«‚Ìˆ—‚âƒQ[ƒW‚È‚Ç‚Ìˆ—‚ğ‹Lq—\’è
-
-        Invoke("FinishMelting", meltTime);
+        PlayerController[] players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+        PlayerController closest = null;
+        float minDistance = 10.0f;
+        foreach (var p in players)
+        {
+            float dist = Vector3.Distance(transform.position, p.transform.position);
+            if (dist < minDistance) 
+            {
+                minDistance = dist; closest = p; 
+            }
+        }
+        return closest;
     }
-
-    private void FinishMelting()
-    {
-        isMelting = false;
-
-        Debug.Log("Ş—¿‚ª‰ğ‚¯‚Ü‚µ‚½");
-    }
-
 }

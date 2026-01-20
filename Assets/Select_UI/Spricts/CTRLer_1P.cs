@@ -7,7 +7,7 @@ public class CTRLer_1P : MonoBehaviour
 {
     //SoundMgr soundMgr = new SoundMgr();
 
-    /*public GameObject cursor;*/
+    public GameObject cursor;
     int diff;
     public int chara; // 現在選択中のキャラ番号（1～10）
 
@@ -16,7 +16,7 @@ public class CTRLer_1P : MonoBehaviour
 
     public Transform oya;
     Vector3 penguinSize = new Vector3(0.75f, 0.75f, 0.75f),
-            nancharaSize = new Vector3(1.5f, 1.5f, 1.5f);
+            nancharaSize = new Vector3(0.75f, 0.75f, 0.75f);
 
 
     // Start is called before the first frame update
@@ -24,6 +24,11 @@ public class CTRLer_1P : MonoBehaviour
     {
         chara = 1; // P1の初期カーソル位置
         diff = 0;
+
+        if (SelectionManager.instance != null)
+        {
+            SelectionManager.instance.difficulty = diff;
+        }
 
         // リストにプレファブが設定されているか確認
         if (characterPrefabs.Length == 0)
@@ -67,16 +72,26 @@ public class CTRLer_1P : MonoBehaviour
         // (この関数は変更なし。P1のA/Dキーを使用)
         if (Input.GetKeyDown("a") && diff > 0)
         {
-            /*cursor.transform.Translate(-10.6f, 33.5f, 0);*/
+            cursor.transform.Translate(-10.6f, 33.5f, 0);
             diff--;
             Debug.Log("Aおうか " + diff);
+
+            if (SelectionManager.instance != null)
+            {
+                SelectionManager.instance.difficulty = diff;
+            }
         }
 
         if (Input.GetKeyDown("d") && diff < 2)
         {
-            /*cursor.transform.Translate(10.6f, -33.5f, 0);*/
+            cursor.transform.Translate(10.6f, -33.5f, 0);
             diff++;
             Debug.Log("Dおうか " + diff);
+
+            if (SelectionManager.instance != null)
+            {
+                SelectionManager.instance.difficulty = diff;
+            }
         }
     }
 
@@ -118,13 +133,15 @@ public class CTRLer_1P : MonoBehaviour
             }
 
             // 5. スケールを調整する
-            if (num == characterPrefabs.Length) // nanchara
+            if (prefabToSpawn.name.Contains("nanchara"))
             {
-                oya.transform.localScale = nancharaSize;
+                oya.transform.localScale = nancharaSize; // デカくする
+
+                displayModel.transform.localPosition = new Vector3(0, 1.0f, 0);
             }
             else
             {
-                oya.transform.localScale = penguinSize;
+                oya.transform.localScale = penguinSize; // 普通のサイズ
             }
         }
     }

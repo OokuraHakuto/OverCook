@@ -11,6 +11,8 @@ public class SelectionManager : MonoBehaviour
     public GameObject player1Prefab; // P1が選んだキャラのプレファブ
     public GameObject player2Prefab; // P2が選んだキャラのプレファブ
 
+    public int difficulty = 1;      // 難易度
+
     void Awake()
     {
         // シーンをまたいで自分自身を保持する
