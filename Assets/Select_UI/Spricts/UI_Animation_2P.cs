@@ -35,7 +35,7 @@ public class UI_Animation_2P : MonoBehaviour
         {
             downArrow.transform.DOMove(new Vector3(700f, 72f, 0f), 0.05f).SetLoops(2, LoopType.Yoyo);
         }
-
+        /*
         if (Input.GetKeyDown("left"))
         {
             if (diff == 1)
@@ -58,6 +58,7 @@ public class UI_Animation_2P : MonoBehaviour
             if (diff < 2)
                 diff++;
         }
+        */
     }
 
     void Decide()

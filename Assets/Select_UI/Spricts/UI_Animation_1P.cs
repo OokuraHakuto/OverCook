@@ -38,9 +38,9 @@ public class UI_Animation_1P : MonoBehaviour
         if (Input.GetKeyDown("a"))
         {
             if (diff == 1)
-                cursor.transform.DOLocalMove(new Vector3(53f, 0f, 0f), 0.1f).SetLoops(1, LoopType.Incremental);
+                cursor.transform.DOLocalMove(new Vector3(/*53*/268f, 0f, 0f), 0.1f).SetLoops(1, LoopType.Incremental);
             else if (diff == 2)
-                cursor.transform.DOLocalMove(new Vector3(152f, -312f, 0f), 0.1f).SetLoops(1, LoopType.Incremental);
+                cursor.transform.DOLocalMove(new Vector3(/*152*/368f, -312f, 0f), 0.1f).SetLoops(1, LoopType.Incremental);
 
             Debug.Log(diff);
             if (diff > 0)
@@ -49,9 +49,9 @@ public class UI_Animation_1P : MonoBehaviour
         if (Input.GetKeyDown("d"))
         {
             if (diff == 0)
-                cursor.transform.DOLocalMove(new Vector3(152f, -312f, 0f), 0.1f).SetLoops(1, LoopType.Incremental);
+                cursor.transform.DOLocalMove(new Vector3(367f, -312f, 0f), 0.1f).SetLoops(1, LoopType.Incremental);
             else if (diff == 1)
-                cursor.transform.DOLocalMove(new Vector3(251f, -624f, 0f), 0.1f).SetLoops(1, LoopType.Incremental);
+                cursor.transform.DOLocalMove(new Vector3(/*251*/468f, -624f, 0f), 0.1f).SetLoops(1, LoopType.Incremental);
 
             Debug.Log(diff);
             if (diff < 2)

@@ -43,8 +43,11 @@ public class CTRLer_2P : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SelectChara();
-        SelectDiff();
+        if (!Go2GameMainManager.OKflg2P)
+        {
+            SelectChara();
+            //SelectDiff();
+        }
     }
 
     public void SelectChara()
@@ -67,12 +70,13 @@ public class CTRLer_2P : MonoBehaviour
         }
     }
 
+    /*
     public void SelectDiff()
     {
         // (‚±‚ÌŠÖ”‚Í•ÏX‚È‚µ)
         if (Input.GetKeyDown("left") && diff > 0)
         {
-            cursor.transform.Translate(-10.6f, 33.5f, 0);
+            //cursor.transform.Translate(-10.6f, 33.5f, 0);
             diff--;
 
             if (SelectionManager.instance != null)
@@ -83,7 +87,7 @@ public class CTRLer_2P : MonoBehaviour
 
         if (Input.GetKeyDown("right") && diff < 2)
         {
-            cursor.transform.Translate(10.6f, -33.5f, 0);
+            //cursor.transform.Translate(10.6f, -33.5f, 0);
             diff++;
 
             if (SelectionManager.instance != null)
@@ -92,6 +96,7 @@ public class CTRLer_2P : MonoBehaviour
             }
         }
     }
+    */
 
     void DispChara(int num)
     {

@@ -43,8 +43,11 @@ public class CTRLer_1P : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SelectChara();
-        SelectDiff();
+        if (!Go2GameMainManager.OKflg1P)
+        {
+            SelectChara();
+            SelectDiff();
+        }
     }
 
     public void SelectChara()
@@ -67,12 +70,13 @@ public class CTRLer_1P : MonoBehaviour
         }
     }
 
+    
     public void SelectDiff()
     {
         // (この関数は変更なし。P1のA/Dキーを使用)
         if (Input.GetKeyDown("a") && diff > 0)
         {
-            cursor.transform.Translate(-10.6f, 33.5f, 0);
+            //cursor.transform.Translate(-10.6f, 33.5f, 0);
             diff--;
             Debug.Log("Aおうか " + diff);
 
@@ -84,7 +88,7 @@ public class CTRLer_1P : MonoBehaviour
 
         if (Input.GetKeyDown("d") && diff < 2)
         {
-            cursor.transform.Translate(10.6f, -33.5f, 0);
+            //cursor.transform.Translate(10.6f, -33.5f, 0);
             diff++;
             Debug.Log("Dおうか " + diff);
 
@@ -94,6 +98,7 @@ public class CTRLer_1P : MonoBehaviour
             }
         }
     }
+    
 
     void DispChara(int num)
     {

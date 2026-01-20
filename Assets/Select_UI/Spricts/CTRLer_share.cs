@@ -48,6 +48,19 @@ public class CTRLer_share : MonoBehaviour
     public void BackTitle(int num)
     {
         // (È—ª... Œ³‚ÌƒR[ƒh‚Ì‚Ü‚Ü)
+
+        if (Input.GetKey("escape"))
+        {
+            backSld.value += Time.deltaTime;
+            backSldGo.SetActive(true);
+        }
+        else
+        {
+            backSld.value = 0;
+            backSldGo.SetActive(false);
+        }
+
+        if (backSld.value >= 1) SceneManager.LoadScene("Title");
     }
 
     public void OKorWait(int num)
@@ -119,6 +132,26 @@ public class CTRLer_share : MonoBehaviour
         {
             standbyText.text = "Wait...";
             standbyText.color = Color.cyan;
+        }
+
+        if (okFlg)
+        {
+            switch (num)
+            {
+                case 1:
+                    if (Input.GetKey("q"))
+                    {
+                        okFlg = false;
+                    }
+                    break;
+
+                case 2:
+                    if (Input.GetKey("l"))
+                    {
+                        okFlg = false;
+                    }
+                    break;
+            }
         }
     }
 }
