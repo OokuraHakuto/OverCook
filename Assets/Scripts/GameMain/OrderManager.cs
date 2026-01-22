@@ -123,6 +123,16 @@ public class OrderManager : MonoBehaviour
         // UIを生成
         GameObject newIcon = Instantiate(selectedMenu.uiPrefab, orderPanelParent);
 
+        // 生成したUIのスクリプトの取得してセットアップ
+        OrderUI uiScript = newIcon.GetComponent<OrderUI>();
+
+        if(uiScript!=null)
+        {
+            // 制限時間の設定
+            float limit = 40.0f;
+            uiScript.Setup(this, selectedMenu.iceName, limit);
+        }
+
         // 出現アニメーション（ポヨン！）
         newIcon.transform.localScale = Vector3.zero;
         newIcon.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
@@ -195,5 +205,33 @@ public class OrderManager : MonoBehaviour
     {
         isOrdering = false; // これでwhileループが止まる
         StopAllCoroutines(); // 待機中のコルーチンも強制停止
+    }
+
+    // 時間切れの報告を受ける関数
+    public void OnOrderTimeUp(OrderUI expiredUI)
+    {
+        // 対応するOrderDataを探す
+        OrderData targetData = null;
+        foreach (var data in currentOrders)
+        {
+            if (data.uiObject == expiredUI.gameObject)
+            {
+                targetData = data;
+                break;
+            }
+        }
+
+        // データが見つかったら削除処理
+        if (targetData != null)
+        {
+            // 失敗SE
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySE(AudioManager.Instance.seFail);
+            }
+
+            // リストから消してUIも消す
+            RemoveOrder(targetData);
+        }
     }
 }
