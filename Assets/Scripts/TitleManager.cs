@@ -26,7 +26,7 @@ public class TitleManager : MonoBehaviour
     // オプションボタン
     public void OpenOptions()
     {
-        Debug.Log("未実装");
+        SceneManager.LoadScene("Option");
     }
 
     // 終了ボタン

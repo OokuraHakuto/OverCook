@@ -246,8 +246,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: START
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 376c75a8d009ed645a14e654269b30f5, type: 2}
-  m_sharedMaterial: {fileID: 4366850891594220136, guid: 376c75a8d009ed645a14e654269b30f5, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: db98ef2f2448e1341b1937e27dc1261c, type: 2}
+  m_sharedMaterial: {fileID: 480879256990659832, guid: db98ef2f2448e1341b1937e27dc1261c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1039,8 +1039,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: OPTION
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 376c75a8d009ed645a14e654269b30f5, type: 2}
-  m_sharedMaterial: {fileID: 4366850891594220136, guid: 376c75a8d009ed645a14e654269b30f5, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: db98ef2f2448e1341b1937e27dc1261c, type: 2}
+  m_sharedMaterial: {fileID: 480879256990659832, guid: db98ef2f2448e1341b1937e27dc1261c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1173,7 +1173,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 14e7217c62dee494a8b64139ad50ee1e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 06d4cc86c929a4a4ba78cc72b456c153, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1451,7 +1451,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00030899048}
+  m_AnchoredPosition: {x: -0.45, y: -0.00030899048}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1903780893
@@ -1476,8 +1476,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: EXIT
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 376c75a8d009ed645a14e654269b30f5, type: 2}
-  m_sharedMaterial: {fileID: 4366850891594220136, guid: 376c75a8d009ed645a14e654269b30f5, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: db98ef2f2448e1341b1937e27dc1261c, type: 2}
+  m_sharedMaterial: {fileID: 480879256990659832, guid: db98ef2f2448e1341b1937e27dc1261c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1539,7 +1539,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -1.6152382, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
