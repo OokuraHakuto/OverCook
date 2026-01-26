@@ -14,7 +14,7 @@ public class SimplePickup : MonoBehaviour, IInteracttable
         // プレイヤーが手ぶらなら
         if (player.heldItem == null)
         {
-            // 3. 自分自身を拾わせる
+            // 自分自身を拾わせる
             player.PickUpItem(this.gameObject);
         }
     }

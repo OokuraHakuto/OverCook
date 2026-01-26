@@ -12,6 +12,10 @@ public class Freezer : MonoBehaviour, IInteracttable
     private GameObject heldItem;
     private Bowl heldBowl; // 中に入っているボウル
 
+    [Header("ナビゲーション")]
+    public GameObject arrow1P;  // 1p赤矢印
+    public GameObject arrow2P;  // 2p青矢印
+
     void Update()
     {
         // ボウルが入っているなら、ボウル自身の「冷凍進行処理」を呼び出す
@@ -19,6 +23,36 @@ public class Freezer : MonoBehaviour, IInteracttable
         {
             // Time.deltaTime（1フレームの時間）を渡して、ボウル側で計算してもらう
             heldBowl.AddFreezeProgress(Time.deltaTime);
+        }
+
+        // 矢印更新
+        UpdateNavArrows();
+    }
+
+    //矢印更新
+    void UpdateNavArrows()
+    {
+        // 初期化
+        if (arrow1P != null) arrow1P.SetActive(false);
+        if (arrow2P != null) arrow2P.SetActive(false);
+
+        // 冷凍庫が使用中なら出さない（既に何か入っているなら）
+        if (heldItem != null) return; 
+
+        // プレイヤー検索
+        var players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+        foreach (var p in players)
+        {
+            if (p.heldItem == null) continue;
+            Bowl bowl = p.heldItem.GetComponent<Bowl>();
+            if (bowl == null) continue;
+
+            // 判定：「冷やす必要がある？」
+            if (bowl.NeedsFreezing())
+            {
+                if (p.playerID == 1 && arrow1P != null) arrow1P.SetActive(true);
+                if (p.playerID == 2 && arrow2P != null) arrow2P.SetActive(true);
+            }
         }
     }
 

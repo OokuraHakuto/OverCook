@@ -10,6 +10,10 @@ public class MicrWave : MonoBehaviour, IInteracttable
     private GameObject heldItem;
     private Bowl heldBowl;        // 今中に入っているボウル
 
+    [Header("ナビゲーション")]
+    public GameObject arrow1P; // 赤矢印 p1
+    public GameObject arrow2P; // 青矢印 p2
+
     void Update()
     {
         // ボウルが入っているなら
@@ -27,6 +31,36 @@ public class MicrWave : MonoBehaviour, IInteracttable
                 if (AudioManager.Instance != null)
                 {
                     AudioManager.Instance.PlaySE(AudioManager.Instance.seRange);
+                }
+            }
+        }
+
+        UpdateNavArrows();
+    }
+    
+    // 矢印コントロール
+    void UpdateNavArrows()
+    {
+        // 基本は消しておく
+        if (arrow1P != null) arrow1P.SetActive(false);
+        if (arrow2P != null) arrow2P.SetActive(false);
+
+        // このレンジが使用中なら出さない
+        if (heldItem != null) return; 
+
+        // プレイヤーを探す
+        var players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+        foreach (var p in players)
+        {
+            // プレイヤーが「ボウル」を持っているかチェック
+            if (p.heldItem != null && p.heldItem.GetComponent<Bowl>() != null)
+            {
+                Bowl bowl = p.heldItem.GetComponent<Bowl>();
+
+                if (bowl != null && bowl.IsReadyToCook())
+                {
+                    if (p.playerID == 1 && arrow1P != null) arrow1P.SetActive(true);
+                    if (p.playerID == 2 && arrow2P != null) arrow2P.SetActive(true);
                 }
             }
         }

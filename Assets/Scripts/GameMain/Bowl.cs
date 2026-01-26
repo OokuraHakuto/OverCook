@@ -351,19 +351,32 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
         return closest;
     }
 
+    // —n‚¯‚½ê‡
     public void Cook() 
     {
-        isMelted = true; UpdateVisual(); 
+        isMelted = true;
+        UpdateVisual(); 
     }
 
+    // ƒŒƒ“ƒW‚É“ü‚ê‚Ä‚¢‚¢‚©‚Ç‚¤‚©
     public bool IsReadyToCook() 
     {
-        return hasMilk && hasVanilla && !isMelted; 
+        // ğŒF
+        // ‹“û‚ª“ü‚Á‚Ä‚¢‚é
+        // ƒoƒjƒ‰‚ª“ü‚Á‚Ä‚¢‚éi«—ˆ‚Í || hasChocolate ‚Æ‚©‘‚â‚·j
+        // ‚Ü‚¾—n‚¯‚Ä‚¢‚È‚¢i–¢’²—j
+        // Å‚°‚Ä‚¢‚È‚¢
+
+        bool hasIngredients = hasMilk && hasVanilla;
+
+        return hasIngredients && !isMelted && !isBurnt && !isFrozen;
     }
 
+    //@Å‚°‚½ê‡
     public void Burn() 
     {
-        isBurnt = true; UpdateVisual(); 
+        isBurnt = true;
+        UpdateVisual(); 
     }
 
 
@@ -405,5 +418,63 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
 
         if (normalModel != null) normalModel.SetActive(false); // •’Ê‚Ì‚ğÁ‚·
         if (crackedModel != null) crackedModel.SetActive(true); // Š„‚ê‚½‚Ì‚ğo‚·
+    }
+
+    // ‚Ü‚¾‰½‚à“ü‚Á‚Ä‚È‚¢ó‘Ô
+    public bool IsEmpty()
+    {
+        // ‹“û‚àƒoƒjƒ‰‚à“ü‚Á‚Ä‚¢‚È‚¢i•’²—‚àn‚Ü‚Á‚Ä‚¢‚È‚¢j‚È‚çu‹ó‚Á‚Ûv
+        return !hasMilk && !hasVanilla && !isMelted && !isFrozen && !isBurnt;
+    }
+
+    // Ş—¿‚ª‚Ü‚¾•K—v
+    public bool NeedsIngredients()
+    {
+        // ’²—Ï‚İ(isMelted)‚â—â“€(isFrozen)‚Å‚È‚¢‘O’ñ
+        if (isMelted || isFrozen || isBurnt) return false;
+
+        // u‹“û‚ª‚È‚¢v ‚Ü‚½‚Í uƒoƒjƒ‰‚ª‚È‚¢v ‚È‚ç true (–îˆó‚¾‚·)
+        return !hasMilk || !hasVanilla;
+    }
+
+    // ‹“û‚ª‘«‚è‚È‚¢‚©H
+    public bool NeedsMilk()
+    {
+        return !hasMilk; // “ü‚Á‚Ä‚È‚¯‚ê‚Î true
+    }
+
+    // ƒGƒbƒZƒ“ƒXi–¡j‚ª‘«‚è‚È‚¢‚©H
+    public bool NeedsEssence()
+    {
+        return !hasVanilla;
+    }
+
+    // ¬‚º‚é•K—v‚ª‚ ‚é‚©
+    public bool NeedsMixing()
+    {
+        // ğŒF
+        // ƒŒƒ“ƒW‚Å‰·‚ßÏ‚İi—n‚¯‚Ä‚éj
+        // ‚Ü‚¾¬‚´‚Á‚Ä‚¢‚È‚¢
+        // Å‚°‚Ä‚È‚¢
+        return isMelted && !isMixed && !isBurnt;
+    }
+
+    // —â‚â‚·•K—v‚ª‚ ‚é‚©
+    public bool NeedsFreezing()
+    {
+        // ğŒF
+        // ¬‚ºI‚í‚Á‚Ä‚¢‚é
+        // ‚Ü‚¾“€‚Á‚Ä‚¢‚È‚¢
+        // Å‚°‚Ä‚È‚¢
+        return isMixed && !isFrozen && !isBurnt;
+    }
+
+    // uŠ®¬•i‚Å‚·‚©Hi”[•i‚Å‚«‚Ü‚·‚©Hjv
+    public bool IsFinished()
+    {
+        // ğŒF
+        // “€‚Á‚Ä‚¢‚éiƒAƒCƒXŠ®¬j
+        // Å‚°‚Ä‚È‚¢
+        return isFrozen && !isBurnt;
     }
 }
