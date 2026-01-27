@@ -9,9 +9,31 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
     public GameObject contentSphere;
     private Renderer sphereRenderer;
 
+    // --- ƒeƒNƒXƒ`ƒƒİ’è ---
+    [Header("ƒeƒNƒXƒ`ƒƒ‘fŞ")]
+    public Texture texMilk;          // ‹“û‚Ì‚İ
+    public Texture texBurnt;         // Å‚°
+
+    [Header("ƒŠƒLƒbƒhi¬‚ºE—n‚¯jƒeƒNƒXƒ`ƒƒ")]
+    public Texture texVanillaLiquid;
+    public Texture texChocolateLiquid;
+    public Texture texStrawberryLiquid;
+    public Texture texMatchaLiquid;
+
+    [Header("Š®¬i“€Œ‹jƒeƒNƒXƒ`ƒƒ")]
+    public Texture texVanillaFrozen;
+    public Texture texChocolateFrozen;
+    public Texture texStrawberryFrozen;
+    public Texture texMatchaFrozen;
+
     // --- ’†g‚Ìó‘Ô ---
-    public bool hasMilk = false;
+    public bool hasMilk = false;    // ‹“û
+
+    // Šeí–¡
     public bool hasVanilla = false;
+    public bool hasChocolate = false;
+    public bool hasStrawberry = false;
+    public bool hasMatcha = false;
 
     // --- ’²—‚Ìisó‹µ ---
     public bool isMelted = false; // —n‚¯‚½
@@ -63,8 +85,18 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
         string itemName = item.name.Replace("(Clone)", "").Trim();
         bool success = false;
 
-        if (itemName == "Item_Milk" && !hasMilk) { hasMilk = true; success = true; }
-        else if (itemName == "Item_Vanilla" && !hasVanilla) { hasVanilla = true; success = true; }
+        if (itemName == "Item_Milk" && !hasMilk) 
+        {
+            hasMilk = true; 
+            success = true; 
+        }
+        else if (!HasAnyFlavor())
+        {
+            if (itemName == "Item_Vanilla") { hasVanilla = true; success = true; }
+            else if (itemName == "Item_Chocolate") { hasChocolate = true; success = true; }
+            else if (itemName == "Item_Strawberry") { hasStrawberry = true; success = true; }
+            else if (itemName == "Item_Matcha") { hasMatcha = true; success = true; }
+        }
 
         if (success)
         {
@@ -77,6 +109,12 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
         }
 
         return success;
+    }
+
+    // ‰½‚©–¡‚ª‚Â‚¢‚Ä‚é‚©H
+    bool HasAnyFlavor()
+    {
+        return hasVanilla || hasChocolate || hasStrawberry || hasMatcha;
     }
 
     // ¬‚º‚éˆ—iŠO•”‚©‚çŒÄ‚Î‚ê‚éj
@@ -140,7 +178,7 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
         // Å‚°‚Ä‚½‚ç‚à‚¤‰½‚à‚µ‚È‚¢
         if (isBurnt) return;
         // Ş—¿‚ª‚È‚¢‚È‚ç‰½‚à‚µ‚È‚¢
-        if (!hasMilk || !hasVanilla) return;
+        if (!hasMilk || !HasAnyFlavor()) return;
 
         currentCookTimer += deltaTime;
 
@@ -289,22 +327,83 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
     // Œ©‚½–ÚXV
     public void UpdateVisual()
     {
-        if (contentSphere == null) return;
+        if (contentSphere == null || sphereRenderer == null) return;
 
-        if (!hasMilk && !hasVanilla)
+        // ‰½‚à“ü‚Á‚Ä‚È‚¯‚ê‚Î”ñ•\¦
+        if (!hasMilk && !HasAnyFlavor())
         {
             contentSphere.SetActive(false);
             return;
         }
         contentSphere.SetActive(true);
 
-        if (isBurnt) sphereRenderer.material.color = Color.black;
-        else if (isFrozen) sphereRenderer.material.color = new Color(0.5f, 0.8f, 1.0f);
-        else if (isMixed) sphereRenderer.material.color = new Color(1.0f, 0.95f, 0.8f);
-        else if (isMelted) sphereRenderer.material.color = new Color(1.0f, 0.8f, 0.6f);
-        else if (hasMilk && hasVanilla) sphereRenderer.material.color = new Color(1.0f, 0.9f, 0.7f);
-        else if (hasMilk) sphereRenderer.material.color = Color.white;
-        else if (hasVanilla) sphereRenderer.material.color = new Color(1.0f, 0.8f, 0.2f);
+        // ƒeƒNƒXƒ`ƒƒ‚ğg‚¤‚Æ‚«‚ÍAF‚Íu”’v‚É‚µ‚Ä‚¨‚­iF‚ª¬‚´‚ç‚È‚¢‚æ‚¤‚Éj
+        sphereRenderer.material.color = Color.white;
+
+        Texture targetTexture = null;
+
+        // ----------------------------------------------------
+        // —Dæ“x‚FÅ‚°
+        // ----------------------------------------------------
+        if (isBurnt)
+        {
+            targetTexture = texBurnt;
+        }
+        // ----------------------------------------------------
+        // —Dæ“x’†F“€‚Á‚½iŠ®¬Œ`j
+        // ----------------------------------------------------
+        else if (isFrozen)
+        {
+            if (hasChocolate)
+            {
+                targetTexture = texChocolateFrozen;
+            }
+            else if (hasStrawberry)
+            {
+                targetTexture = texStrawberryFrozen;
+            }
+            else if (hasMatcha)
+            {
+                targetTexture = texMatchaFrozen;
+            }
+            else
+            {
+                targetTexture = texVanillaFrozen; // ƒfƒtƒHƒ‹ƒgƒoƒjƒ‰
+            }
+        }
+        // ----------------------------------------------------
+        // —Dæ“x’áF‰t‘Ìi‚Ü‚¾“€‚Á‚Ä‚È‚¢j
+        // ----------------------------------------------------
+        else
+        {
+            if (hasChocolate)
+            {
+                targetTexture = texChocolateLiquid;
+            }
+            else if (hasStrawberry)
+            {
+                targetTexture = texStrawberryLiquid;
+            }
+            else if (hasMatcha)
+            {
+                targetTexture = texMatchaLiquid;
+            }
+            else if (hasVanilla)
+            {
+                targetTexture = texVanillaLiquid;
+            }
+            // –¡‚ª‚È‚¢‚È‚çA‹“û‚ª“ü‚Á‚Ä‚é‚Í‚¸
+            else
+            {
+                targetTexture = texMilk;
+            }
+        }
+
+        // Œˆ’è‚µ‚½ƒeƒNƒXƒ`ƒƒ‚ğ“K—p
+        if (targetTexture != null)
+        {
+            sphereRenderer.material.mainTexture = targetTexture;
+        }
     }
 
     // ƒCƒ“ƒ^ƒ‰ƒNƒgi’¼ÚG‚Á‚½ê‡j
@@ -367,7 +466,7 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
         // ‚Ü‚¾—n‚¯‚Ä‚¢‚È‚¢i–¢’²—j
         // Å‚°‚Ä‚¢‚È‚¢
 
-        bool hasIngredients = hasMilk && hasVanilla;
+        bool hasIngredients = hasMilk && HasAnyFlavor();
 
         return hasIngredients && !isMelted && !isBurnt && !isFrozen;
     }
@@ -423,8 +522,8 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
     // ‚Ü‚¾‰½‚à“ü‚Á‚Ä‚È‚¢ó‘Ô
     public bool IsEmpty()
     {
-        // ‹“û‚àƒoƒjƒ‰‚à“ü‚Á‚Ä‚¢‚È‚¢i•’²—‚àn‚Ü‚Á‚Ä‚¢‚È‚¢j‚È‚çu‹ó‚Á‚Ûv
-        return !hasMilk && !hasVanilla && !isMelted && !isFrozen && !isBurnt;
+        // ‹“û‚àƒGƒbƒZƒ“ƒX‚à“ü‚Á‚Ä‚¢‚È‚¢i•’²—‚àn‚Ü‚Á‚Ä‚¢‚È‚¢j‚È‚çu‹ó‚Á‚Ûv
+        return !hasMilk && !HasAnyFlavor() && !isMelted && !isFrozen && !isBurnt;
     }
 
     // Ş—¿‚ª‚Ü‚¾•K—v
@@ -434,7 +533,7 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
         if (isMelted || isFrozen || isBurnt) return false;
 
         // u‹“û‚ª‚È‚¢v ‚Ü‚½‚Í uƒoƒjƒ‰‚ª‚È‚¢v ‚È‚ç true (–îˆó‚¾‚·)
-        return !hasMilk || !hasVanilla;
+        return !hasMilk || !HasAnyFlavor();
     }
 
     // ‹“û‚ª‘«‚è‚È‚¢‚©H
@@ -446,7 +545,7 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
     // ƒGƒbƒZƒ“ƒXi–¡j‚ª‘«‚è‚È‚¢‚©H
     public bool NeedsEssence()
     {
-        return !hasVanilla;
+        return !HasAnyFlavor();
     }
 
     // ¬‚º‚é•K—v‚ª‚ ‚é‚©
@@ -476,5 +575,11 @@ public class Bowl : MonoBehaviour, IInteracttable // ©ƒXƒyƒ‹’ˆÓiŒ³‚Ì‚Ü‚Ü‚É‚µ‚
         // “€‚Á‚Ä‚¢‚éiƒAƒCƒXŠ®¬j
         // Å‚°‚Ä‚È‚¢
         return isFrozen && !isBurnt;
+    }
+
+    // ƒSƒ~” s‚«‚©‚Ç‚¤‚©i‚Ğ‚ÑŠ„‚ê‚Ä‚¢‚éA‚Ü‚½‚ÍÅ‚°‚Ä‚¢‚éj
+    public bool NeedsDisposal()
+    {
+        return isCracked || isBurnt;
     }
 }

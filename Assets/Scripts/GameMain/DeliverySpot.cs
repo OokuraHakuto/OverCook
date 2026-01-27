@@ -4,8 +4,17 @@ using UnityEngine;
 
 public class DeliverySpot : MonoBehaviour, IInteracttable
 {
-    [Header("スコア設定")]
-    public int scorePerIce = 100; // 1個あたりの点数（仮）
+    [Header("★スコア設定 (Easy)")]
+    public int baseScoreEasy = 100;
+    public int maxBonusEasy = 100; // 合計Max 200
+
+    [Header("★スコア設定 (Normal)")]
+    public int baseScoreNormal = 150;
+    public int maxBonusNormal = 200; // 合計Max 350
+
+    [Header("★スコア設定 (Hard)")]
+    public int baseScoreHard = 250;
+    public int maxBonusHard = 350; // 合計Max 600！
 
     [Header("ナビゲーション")]
     public GameObject arrow1P;  // 1p赤矢印
@@ -31,10 +40,10 @@ public class DeliverySpot : MonoBehaviour, IInteracttable
         {
             if (p.heldItem == null) continue;
 
-            Bowl bowl = p.heldItem.GetComponent<Bowl>();
+            Cup cup = p.heldItem.GetComponent<Cup>();
 
-            // ボウルを持っていて、かつ「完成品」なら
-            if (bowl != null && bowl.IsFinished())
+            // 「カップ」を持っていて、かつ「中身が入っている（完成品）」なら
+            if (cup != null && cup.isFull)
             {
                 if (p.playerID == 1 && arrow1P != null) arrow1P.SetActive(true);
                 if (p.playerID == 2 && arrow2P != null) arrow2P.SetActive(true);
@@ -56,24 +65,49 @@ public class DeliverySpot : MonoBehaviour, IInteracttable
             // OrderManagerが存在するかチェック
             if (OrderManager.Instance != null)
             {
-                // ここで注文マネージャーに「これ合ってる？」と聞く！
-                bool isCorrectOrder = OrderManager.Instance.TryDelivery(rawName);
+                // outパラメータで残り時間割合を受け取る変数を用意
+                float timeRatio = 0f;
+
+                // TryDeliveryの呼び出し
+                bool isCorrectOrder = OrderManager.Instance.TryDelivery(rawName, out timeRatio);
 
                 if (isCorrectOrder)
                 {
-                    // --- 正解の処理 ---
+                    // 難易度に応じてスコア配分を決める
+                    int currentBase = baseScoreNormal;
+                    int currentBonus = maxBonusNormal;
 
-                    // スコア加算（基本点 + 注文ボーナスなど）
+                    if (SelectionManager.instance != null)
+                    {
+                        int diff = SelectionManager.instance.difficulty;
+                        switch (diff)
+                        {
+                            case 0: // Easy
+                                currentBase = baseScoreEasy;
+                                currentBonus = maxBonusEasy;
+                                break;
+                            case 1: // Normal
+                                currentBase = baseScoreNormal;
+                                currentBonus = maxBonusNormal;
+                                break;
+                            case 2: // Hard
+                                currentBase = baseScoreHard;
+                                currentBonus = maxBonusHard;
+                                break;
+                        }
+                    }
+
+                    // 選ばれた設定値を使って計算
+                    int finalScore = currentBase + Mathf.RoundToInt(currentBonus * timeRatio);
+
+                    // スコア加算
                     if (GameManager.Instance != null)
                     {
-                        GameManager.Instance.AddScore(scorePerIce);
+                        GameManager.Instance.AddScore(finalScore);
                     }
 
                     // アイテムを消す
                     player.GiveItem();
-
-                    // 成功エフェクトや音など
-                    Debug.Log("納品成功！");
                 }
                 else
                 {

@@ -45,6 +45,11 @@ public class OrderManager : MonoBehaviour
     [Header("ゲーム開始後の最初の待機時間（秒）")]
     public float startDelay = 1.5f;
 
+    [Header("難易度ごとの制限時間（秒）")]
+    public float timeLimitEasy = 60f;   // イージー：ゆったり
+    public float timeLimitNormal = 45f; // ノーマル：普通
+    public float timeLimitHard = 30f;   // ハード：激ムズ
+
     void Awake()
     {
         Time.timeScale = 1f;
@@ -129,7 +134,9 @@ public class OrderManager : MonoBehaviour
         if(uiScript!=null)
         {
             // 制限時間の設定
-            float limit = 40.0f;
+            float limit = GetTimeLimitByDifficulty();
+            
+            // UIに制限時間を渡す
             uiScript.Setup(this, selectedMenu.iceName, limit);
         }
 
@@ -145,9 +152,29 @@ public class OrderManager : MonoBehaviour
         currentOrders.Add(newData);
     }
 
-    // 納品チェック（DeliverySpotから呼ばれる）
-    public bool TryDelivery(string deliveredItemName)
+    // 難易度に応じた制限時間の設定
+    float GetTimeLimitByDifficulty()
     {
+        int diff = 1; // デフォルトはNormal
+
+        if (SelectionManager.instance != null)
+        {
+            diff = SelectionManager.instance.difficulty;
+        }
+
+        switch (diff)
+        {
+            case 0: return timeLimitEasy;
+            case 1: return timeLimitNormal;
+            case 2: return timeLimitHard;
+            default: return timeLimitNormal;
+        }
+    }
+
+    // 納品チェック（DeliverySpotから呼ばれる）
+    public bool TryDelivery(string deliveredItemName, out float remainingRatio)
+    {
+        remainingRatio = 0f; // 初期化
         OrderData matchedOrder = null;
 
         // 今ある注文の中に、持ってきたアイテムと同じ名前のものがあるか？
@@ -163,6 +190,20 @@ public class OrderManager : MonoBehaviour
 
         if (matchedOrder != null)
         {
+            // 残り時間の割合を計算する
+            if (matchedOrder.uiObject != null)
+            {
+                OrderUI ui = matchedOrder.uiObject.GetComponent<OrderUI>();
+                if (ui != null)
+                {
+                    // UI側で timeSlider.value / timeSlider.maxValue で計算できる
+                    if (ui.timeSlider != null && ui.timeSlider.maxValue > 0)
+                    {
+                        remainingRatio = ui.timeSlider.value / ui.timeSlider.maxValue;
+                    }
+                }
+            }
+
             if (AudioManager.Instance != null)
             {
                 AudioManager.Instance.PlaySE(AudioManager.Instance.seSuccess);

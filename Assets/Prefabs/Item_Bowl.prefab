@@ -226,8 +226,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   contentSphere: {fileID: 4236383405617006051}
+  texMilk: {fileID: 2800000, guid: 244898ca3a81e9146a2d89b9a2e4b56c, type: 3}
+  texBurnt: {fileID: 2800000, guid: a7421e9419c71784ba9886cd4f6721e1, type: 3}
+  texVanillaLiquid: {fileID: 2800000, guid: 42759624eae6aa146915f93fe3c1c539, type: 3}
+  texChocolateLiquid: {fileID: 2800000, guid: 3c7aaac9d4ef8f5428953f01b4e1d19d, type: 3}
+  texStrawberryLiquid: {fileID: 2800000, guid: dc266a0b709c5b24998c3c7f0accdcc0, type: 3}
+  texMatchaLiquid: {fileID: 2800000, guid: 48f7d750096df744a8c5d32bef9dcff3, type: 3}
+  texVanillaFrozen: {fileID: 2800000, guid: 354090590d5eb8d4d8b857c4971b965b, type: 3}
+  texChocolateFrozen: {fileID: 2800000, guid: da2212f182e12984587a4e191e0fcbfe, type: 3}
+  texStrawberryFrozen: {fileID: 2800000, guid: 41f2244487078cf4ba1168c88594068e, type: 3}
+  texMatchaFrozen: {fileID: 2800000, guid: 1fe0bacf2fb8b28428581ee9e4fe795d, type: 3}
   hasMilk: 0
   hasVanilla: 0
+  hasChocolate: 0
+  hasStrawberry: 0
+  hasMatcha: 0
   isMelted: 0
   isMixed: 0
   isFrozen: 0

@@ -11,7 +11,14 @@ public class Counter : MonoBehaviour, IInteracttable
     public bool canPlaceItem = true;
 
     [Header("完成したアイスのプレファブ")]
-    public GameObject fullIcePrefab;
+    public GameObject cupVanillaPrefab;
+    public GameObject cupChocolatePrefab;
+    public GameObject cupStrawberryPrefab;
+    public GameObject cupMatchaPrefab;
+
+    [Header("ナビゲーション")]
+    public GameObject arrow1P;  // 1p赤矢印
+    public GameObject arrow2P;  // 2p青矢印
 
     void Start()
     {
@@ -21,6 +28,67 @@ public class Counter : MonoBehaviour, IInteracttable
             Collider[] cols = heldItem.GetComponentsInChildren<Collider>();
             foreach (Collider c in cols) c.enabled = false;
         }
+    }
+
+    // 更新
+    void Update()
+    {
+        UpdateNavArrows();
+    }
+
+    // 矢印の更新
+    void UpdateNavArrows()
+    {
+        // 初期化（一旦消す）
+        if (arrow1P != null) arrow1P.SetActive(false);
+        if (arrow2P != null) arrow2P.SetActive(false);
+
+        // プレイヤーを検索
+        var players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+        foreach (var p in players)
+        {
+            if (p.heldItem == null) continue; // 手ぶらなら用はない
+
+            // ---------------------------------------------------------
+            // ケースA：机が「空」で、プレイヤーが「冷凍ボウル」を持っている
+            // ---------------------------------------------------------
+            if (heldItem == null && canPlaceItem)
+            {
+                Bowl bowl = p.heldItem.GetComponent<Bowl>();
+
+                // 「凍ってる」かつ「焦げてない」ボウルなら置かせたい
+                if (bowl != null && bowl.isFrozen && !bowl.isBurnt)
+                {
+                    ShowArrow(p.playerID);
+                }
+            }
+            // ---------------------------------------------------------
+            // ケースB：机に「冷凍ボウル」があり、プレイヤーが「カップ」を持っている
+            // ---------------------------------------------------------
+            else if (heldItem != null)
+            {
+                // 机にあるアイテムがボウルかチェック
+                Bowl tableBowl = heldItem.GetComponent<Bowl>();
+
+                // プレイヤーがカップを持っているかチェック（Cupクラスがあると仮定）
+                // ※もしCupクラスがないなら p.heldItem.name.Contains("Cup") 等で代用
+                Cup playerCup = p.heldItem.GetComponent<Cup>();
+
+                // 「机のが冷凍ボウル」＆「プレイヤーがカップ」＆「カップがまだ空」なら
+                if (tableBowl != null && tableBowl.isFrozen && playerCup != null && !playerCup.isFull
+                    && !tableBowl.isCracked && !tableBowl.isBurnt)
+                {
+                    ShowArrow(p.playerID);
+                }
+            }
+        }
+    }
+
+    // 指定したプレイヤーIDの矢印をONにするヘルパー関数
+    void ShowArrow(int playerID)
+    {
+        if (playerID == 1 && arrow1P != null) arrow1P.SetActive(true);
+        if (playerID == 2 && arrow2P != null) arrow2P.SetActive(true);
     }
 
     public void Interact()
@@ -74,13 +142,32 @@ public class Counter : MonoBehaviour, IInteracttable
                         player.ReleaseItem();
                         Destroy(emptyCup);
 
-                        // 「完成アイス」を生成して持たせる
-                        if (fullIcePrefab != null)
+                        // ボウルの味に応じて生成するプレファブを決定する
+                        GameObject prefabToSpawn = null;
+
+                        if (bowl.hasChocolate)
                         {
-                            GameObject newIce = Instantiate(fullIcePrefab);
+                            prefabToSpawn = cupChocolatePrefab;
+                        }
+                        else if (bowl.hasStrawberry)
+                        {
+                            prefabToSpawn = cupStrawberryPrefab;
+                        }
+                        else if (bowl.hasMatcha)
+                        {
+                            prefabToSpawn = cupMatchaPrefab;
+                        }
+                        else
+                        {
+                            prefabToSpawn = cupVanillaPrefab; // デフォルト
+                        }
+
+                        // 「完成アイス」を生成して持たせる
+                        if (prefabToSpawn != null)
+                        {
+                            GameObject newIce = Instantiate(prefabToSpawn);
                             player.PickUpItem(newIce);
 
-                            // サイズや位置の調整
                             ItemSettings settings = newIce.GetComponent<ItemSettings>();
                             if (settings != null)
                             {
